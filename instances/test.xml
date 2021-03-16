@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Resources>
+    <Leagues>
+        <league id="0" name="League 0"/>
+    </Leagues>
+    <Teams>
+        <team id="0" league="0" name="Team 0"/>
+        <team id="1" league="0" name="Team 1"/>
+        <team id="2" league="0" name="Team 2"/>
+        <team id="3" league="0" name="Team 3"/>
+    </Teams>
+</Resources>
