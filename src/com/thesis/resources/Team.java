@@ -1,4 +1,4 @@
-package com.thesis;
+package com.thesis.resources;
 
 import javax.xml.bind.annotation.*;
 

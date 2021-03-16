@@ -1,8 +1,6 @@
-package com.thesis;
+package com.thesis.resources;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +9,7 @@ public class Resources {
 
     List<Team> teams;
     List<League> league;
+    List<Slot> slots;
 
     @XmlElementWrapper(name = "Leagues")
     @XmlElement(name = "league")
@@ -36,4 +35,13 @@ public class Resources {
         return this.teams;
     }
 
+    @XmlElementWrapper(name = "Slots")
+    @XmlElement(name = "slot")
+    public void setSlots(List<Slot> slots) {
+        this.slots = slots;
+    }
+
+    public List<Slot> getSlots() {
+        return slots;
+    }
 }

@@ -1,20 +1,25 @@
 package com.thesis;
 
+import com.thesis.resources.Resources;
+import com.thesis.resources.Slot;
+import com.thesis.resources.Team;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws JAXBException {
         File file = new File("instances/test.xml");
-        JAXBContext jaxbContext = JAXBContext.newInstance(Resources.class);
+        JAXBContext jaxbContext = JAXBContext.newInstance(Instance.class);
 
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-        Resources resources = (Resources) jaxbUnmarshaller.unmarshal(file);
-        for (Team t : resources.getTeams())
+        Instance instance = (Instance) jaxbUnmarshaller.unmarshal(file);
+        for (Team t : instance.getResources().getTeams())
             System.out.println(t.getId() + " " + t.getName() + " " + t.getLeague());
-        System.out.println(resources.getLeague().get(0).getName());
+        System.out.println(instance.getResources().getLeague().get(0).getName());
+        for (Slot s : instance.getResources().getSlots())
+            System.out.println(s.getId() + " " + s.getName());
     }
 }

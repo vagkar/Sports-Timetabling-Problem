@@ -1,5 +1,7 @@
 package com.thesis;
 
+import com.thesis.resources.Resources;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -8,7 +10,7 @@ public class Instance {
 //    MetaData metaData;
 //    Structure structure;
 //    String objective;
-    private Resources resources;
+    Resources resources;
 
     public Resources getResources() {
         return this.resources;

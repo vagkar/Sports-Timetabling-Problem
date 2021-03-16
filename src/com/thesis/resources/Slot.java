@@ -1,13 +1,10 @@
-package com.thesis;
+package com.thesis.resources;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 
 @XmlType( propOrder = { "id", "name"} )
-@XmlRootElement(name = "league")
-public class League {
-
+@XmlRootElement(name = "slot")
+public class Slot {
     int id;
     String name;
 
