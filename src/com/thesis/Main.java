@@ -1,6 +1,5 @@
 package com.thesis;
 
-import com.thesis.resources.Resources;
 import com.thesis.resources.Slot;
 import com.thesis.resources.Team;
 
@@ -21,5 +20,7 @@ public class Main {
         System.out.println(instance.getResources().getLeague().get(0).getName());
         for (Slot s : instance.getResources().getSlots())
             System.out.println(s.getId() + " " + s.getName());
+
+        System.out.println(instance.getConstraints().getSE1().get(0).getTeams());
     }
 }
