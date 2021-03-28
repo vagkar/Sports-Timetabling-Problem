@@ -10,7 +10,7 @@ public class ParseXML {
     private Instance instance;
 
     public ParseXML() throws JAXBException {
-        File file = new File("instances/ITC2021_Test6.xml");
+        File file = new File("instances/test.xml");
         JAXBContext jaxbContext = JAXBContext.newInstance(Instance.class);
 
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();

@@ -18,8 +18,6 @@ public class Resources {
     }
 
     public List<League> getLeague() {
-        if (league == null)
-            league = new ArrayList<League>();
         return this.league;
     }
 
@@ -30,8 +28,6 @@ public class Resources {
     }
 
     public List<Team> getTeams() {
-        if (teams == null)
-            teams = new ArrayList<Team>();
         return this.teams;
     }
 
