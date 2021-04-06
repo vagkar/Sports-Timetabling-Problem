@@ -1,7 +1,6 @@
 package com.thesis.timetable;
 
 import com.thesis.Instance;
-import com.thesis.timetable.Timetable;
 import com.thesis.timetable.scheduler.CircleMethod;
 import com.thesis.timetable.scheduler.ScheduleMethod;
 
@@ -25,18 +24,21 @@ public class TimetableScheduler {
         return this.timetable;
     }
 
-    public ScheduleMethod selectScheduleMethod() { //private μελλοντικά
+    private ScheduleMethod selectScheduleMethod() {
         System.out.println("1) Circle Method");
         System.out.print("Select schedule Method: ");
         int chosenMethod = new Scanner(System.in).nextInt();
 
         switch (chosenMethod) {
+            case 0:
+                System.exit(-1);
+
             case 1:
                 return new CircleMethod(numberOfTeams, instance);
 
             default:
-                System.out.println("Select a valid number from 1 to 1!");
-                return null;
+                System.out.println("Select a valid number from 1 to 1 or 0 to exit!");
+                return selectScheduleMethod();
         }
     }
 }

@@ -1,4 +1,6 @@
-package com.thesis;
+package com.thesis.xmldata;
+
+import com.thesis.Instance;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -10,7 +12,7 @@ public class ParseXML {
     private Instance instance;
 
     public ParseXML() throws JAXBException {
-        File file = new File("instances/test.xml");
+        File file = new SelectXML().getSelectedFile();
         JAXBContext jaxbContext = JAXBContext.newInstance(Instance.class);
 
         Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();

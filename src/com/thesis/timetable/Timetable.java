@@ -20,7 +20,7 @@ public class Timetable {
 
     public void printTimetable() {
         for (int i = 0; i < timetable.length; i++) {
-            for (int j = 0; j < timetable[i].length; j++) { // remove /2 when 2RR completed
+            for (int j = 0; j < timetable[i].length; j++) {
                 System.out.print("(" + timetable[i][j].getHome().getId() + "-" + timetable[i][j].getAway().getId() + ") ");
             }
             System.out.println();
