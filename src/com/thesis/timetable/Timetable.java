@@ -1,13 +1,19 @@
 package com.thesis.timetable;
 
 import com.thesis.Match;
+import com.thesis.instance.resources.Team;
+
+import java.util.HashMap;
 
 public class Timetable {
+
+    private HashMap<Team, Match>[] timetable1;
 
     private Match[][] timetable;
 
     public Timetable(int numberOfTeams , int timeSlots) {
         this.timetable = new Match[(numberOfTeams / 2)][timeSlots];
+        this.timetable1 = new HashMap[timeSlots];
     }
 
     public Match[][] getTimetable() {
@@ -29,5 +35,17 @@ public class Timetable {
             }
             System.out.println();
         }
+    }
+
+    public void put(int timeSlot, Match match) {
+        this.timetable1[timeSlot].put(match.getHome(), match);
+    }
+
+    public HashMap<Team, Match>[] getTimetable1() {
+        return this.timetable1.clone();
+    }
+
+    public void setTimetable1(HashMap<Team, Match>[] timetable1) {
+        this.timetable1 = timetable1;
     }
 }
