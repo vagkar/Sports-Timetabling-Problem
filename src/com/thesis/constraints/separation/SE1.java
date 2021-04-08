@@ -8,11 +8,11 @@ import java.util.List;
 @XmlRootElement(name = "SE1")
 public class SE1 {
 
-    String mode1;
-    int min;
-    int penalty;
-    List<Integer> teams = null;
-    String type;
+    private String mode1;
+    private int min;
+    private int penalty;
+    private List<Integer> teams = null;
+    private boolean soft = false;
     private String stringTeams = null;
 
     public String getMode1() {
@@ -70,12 +70,14 @@ public class SE1 {
         this.stringTeams = stringTeams;
     }
 
-    public String getType() {
-        return this.type;
+
+    public boolean isSoft() {
+        return soft;
     }
 
     @XmlAttribute(name = "type")
-    public void setType(String type) {
-        this.type = type;
+    public void setSoft(String soft) {
+        if (soft.equals("SOFT"))
+            this.soft = true;
     }
 }

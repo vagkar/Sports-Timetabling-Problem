@@ -19,9 +19,13 @@ public class Timetable {
     }
 
     public void printTimetable() {
+        for (int i = 0; i < timetable[0].length; i++) {
+            System.out.print(timetable[0][i].getTimeSlot().getName() + "\t");
+        }
+        System.out.println();
         for (int i = 0; i < timetable.length; i++) {
             for (int j = 0; j < timetable[i].length; j++) {
-                System.out.print("(" + timetable[i][j].getHome().getId() + "-" + timetable[i][j].getAway().getId() + ") ");
+                System.out.print("(" + timetable[i][j].getHome().getId() + "-" + timetable[i][j].getAway().getId() + ")\t");
             }
             System.out.println();
         }
