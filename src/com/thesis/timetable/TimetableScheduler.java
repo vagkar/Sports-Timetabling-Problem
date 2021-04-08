@@ -1,6 +1,6 @@
 package com.thesis.timetable;
 
-import com.thesis.Instance;
+import com.thesis.instance.Instance;
 import com.thesis.timetable.scheduler.CircleMethod;
 import com.thesis.timetable.scheduler.ScheduleMethod;
 

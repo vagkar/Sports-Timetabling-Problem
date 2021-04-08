@@ -1,9 +1,9 @@
 package com.thesis.timetable.scheduler;
 
-import com.thesis.Instance;
+import com.thesis.instance.Instance;
 import com.thesis.Match;
-import com.thesis.resources.Slot;
-import com.thesis.resources.Team;
+import com.thesis.instance.resources.Slot;
+import com.thesis.instance.resources.Team;
 import com.thesis.timetable.Timetable;
 
 import java.util.ArrayList;

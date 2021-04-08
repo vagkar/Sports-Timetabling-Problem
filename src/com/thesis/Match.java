@@ -1,7 +1,7 @@
 package com.thesis;
 
-import com.thesis.resources.Slot;
-import com.thesis.resources.Team;
+import com.thesis.instance.resources.Slot;
+import com.thesis.instance.resources.Team;
 
 public class Match {
 

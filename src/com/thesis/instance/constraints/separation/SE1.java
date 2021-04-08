@@ -1,4 +1,4 @@
-package com.thesis.constraints.separation;
+package com.thesis.instance.constraints.separation;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;

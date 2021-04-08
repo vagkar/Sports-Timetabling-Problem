@@ -1,6 +1,6 @@
-package com.thesis.constraints;
+package com.thesis.instance.constraints;
 
-import com.thesis.constraints.separation.SE1;
+import com.thesis.instance.constraints.separation.SE1;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;

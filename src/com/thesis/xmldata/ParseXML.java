@@ -1,6 +1,6 @@
 package com.thesis.xmldata;
 
-import com.thesis.Instance;
+import com.thesis.instance.Instance;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

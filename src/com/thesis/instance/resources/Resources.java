@@ -1,7 +1,6 @@
-package com.thesis.resources;
+package com.thesis.instance.resources;
 
 import javax.xml.bind.annotation.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement(name = "Resources")
