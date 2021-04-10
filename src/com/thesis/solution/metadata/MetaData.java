@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlType;
  * MetaData for Solution File
  *
  */
+@XmlType( propOrder = {"solutionName", "instanceName", "objectiveValue"} )
 @XmlRootElement(name = "MetaData")
 public class MetaData {
     private String solutionName;

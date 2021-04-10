@@ -12,8 +12,6 @@ import java.util.ArrayList;
 
 public class App {
 
-//    private static Timetable timetable;
-
     public static void execute() throws JAXBException {
         ParseXML parseXML = new ParseXML();
         parseXML.unmarshall();

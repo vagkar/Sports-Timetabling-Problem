@@ -2,7 +2,9 @@ package com.thesis.solution.metadata;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
+@XmlType( propOrder = {"infeasibility", "objective"} )
 @XmlRootElement(name = "ObjectiveValue")
 public class ObjectiveValue {
 

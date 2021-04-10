@@ -7,7 +7,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.Result;
 import java.io.File;
 
 public class ParseXML {
@@ -40,10 +39,9 @@ public class ParseXML {
         JAXBContext jaxbContext = JAXBContext.newInstance(Solution.class);
         Marshaller marshaller = jaxbContext.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        solution.setInstanceName(file.getName());
+        solution.setInstanceName(instance.getMetaData().getInstanceName());
         solution.setSolutionName("Solution-"
                 + instance.getMetaData().getInstanceName() + ".xml");
-//        marshaller.marshal(solution, (Result) System.in);
         marshaller.marshal(solution, new File("solutions/Solution-"
                 + instance.getMetaData().getInstanceName() + ".xml"));
     }

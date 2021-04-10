@@ -2,7 +2,9 @@ package com.thesis.solution.games;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
+@XmlType( propOrder = {"home", "away", "slot"} )
 @XmlRootElement(name = "ScheduledMatch")
 public class ScheduledMatch {
     private int home;

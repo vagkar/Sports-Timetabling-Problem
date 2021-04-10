@@ -6,10 +6,9 @@ import com.thesis.solution.metadata.MetaData;
 import javax.xml.bind.annotation.*;
 import java.util.List;
 
+@XmlType( propOrder = {"metaData", "games"} )
 @XmlRootElement(name = "Solution")
 public class Solution {
-
-//    private Timetable timetable;
 
     private MetaData metaData;
     private List<ScheduledMatch> games;

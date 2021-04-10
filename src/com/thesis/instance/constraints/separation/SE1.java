@@ -12,7 +12,8 @@ public class SE1 {
     private int min;
     private int penalty;
     private List<Integer> teams = null;
-    private boolean soft = false;
+    private boolean soft;
+    private String type;
     private String stringTeams = null;
 
     public String getMode1() {
@@ -68,16 +69,20 @@ public class SE1 {
     @XmlAttribute(name = "teams")
     public void setStringTeams(String stringTeams) {
         this.stringTeams = stringTeams;
+        loadTeams();
     }
 
-
-    public boolean isSoft() {
+    public boolean isTypeSoft() {
         return soft;
     }
 
+    public String getType() {
+        return this.type;
+    }
+
     @XmlAttribute(name = "type")
-    public void setSoft(String soft) {
-        if (soft.equals("SOFT"))
-            this.soft = true;
+    public void setType(String type) {
+        this.type = type;
+        this.soft = this.type.equals("SOFT");
     }
 }
