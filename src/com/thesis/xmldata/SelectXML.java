@@ -30,7 +30,7 @@ public class SelectXML {
 
 
         int option = new Scanner(System.in).nextInt();
-        while (option >= xmlNames.length || option < 1) {
+        while (option > xmlNames.length || option < 1) {
             System.out.print("Try again or select 0 for Exit Program: ");
             option = getOption();
             if (option == 0) System.exit(-1);

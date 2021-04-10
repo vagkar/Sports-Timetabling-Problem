@@ -1,7 +1,7 @@
 package com.thesis.timetable.scheduler;
 
 import com.thesis.instance.Instance;
-import com.thesis.Match;
+import com.thesis.timetable.Match;
 import com.thesis.instance.resources.Slot;
 import com.thesis.instance.resources.Team;
 import com.thesis.timetable.Timetable;
@@ -43,10 +43,14 @@ public class CircleMethod implements ScheduleMethod {
         for (int i = 0; i < timeSlots/2; i++) {
             for (int j = 0; j < halfTeams; j++) {
                 if (j == 0) {
-                    matches[j][i] = new Match(constantTeam, awayTeams.get(j), slots.get(i));
+                    Match match = new Match(constantTeam, awayTeams.get(j), slots.get(i));
+                    timetable.add(j,i,match); //add for 2d Array
+                    timetable.put(match); //put for Array of HashMaps
                     continue;
                 }
-                matches[j][i] = new Match(homeTeams.get(j - 1), awayTeams.get(j), slots.get(i));
+                Match match = new Match(homeTeams.get(j - 1), awayTeams.get(j), slots.get(i));
+                timetable.add(j,i,match);
+                timetable.put(match);
             }
 
             homeTeams.addFirst(awayTeams.pop());
@@ -58,18 +62,20 @@ public class CircleMethod implements ScheduleMethod {
         for (int i = timeSlots/2; i < timeSlots; i++) {
             for (int j = 0; j < halfTeams; j++) {
                 if (j == 0) {
-                    matches[j][i] = new Match(awayTeams.get(j), constantTeam, slots.get(i));
+                    Match match = new Match(awayTeams.get(j), constantTeam, slots.get(i));
+                    timetable.add(j,i,match);
+                    timetable.put(match);
                     continue;
                 }
-                matches[j][i] = new Match(awayTeams.get(j), homeTeams.get(j - 1), slots.get(i));
+                Match match = new Match(awayTeams.get(j), homeTeams.get(j - 1), slots.get(i));
+                timetable.add(j,i,match);
+                timetable.put(match);
             }
 
             homeTeams.addFirst(awayTeams.pop());
             awayTeams.add(homeTeams.getLast());
             homeTeams.removeLast();
         }
-
-        timetable.setTimetable(matches);
 
         return this.timetable;
     }

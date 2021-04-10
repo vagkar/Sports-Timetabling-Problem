@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Instance>
+    <MetaData>
+        <InstanceName>Test</InstanceName>
+        <DataType>A</DataType>
+        <Contributor>ITC2021</Contributor>
+        <Date year="2020" month="10"/>
+    </MetaData>
+    <Structure>
+        <Format leagueIds="0">
+            <numberRoundRobin>2</numberRoundRobin>
+            <compactness>C</compactness>
+            <gameMode>P</gameMode>
+        </Format>
+    </Structure>
+    <ObjectiveFunction>
+        <Objective>SC</Objective>
+    </ObjectiveFunction>
     <Resources>
         <Leagues>
             <league id="0" name="League 0"/>

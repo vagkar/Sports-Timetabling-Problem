@@ -1,4 +1,4 @@
-package com.thesis;
+package com.thesis.timetable;
 
 import com.thesis.instance.resources.Slot;
 import com.thesis.instance.resources.Team;
