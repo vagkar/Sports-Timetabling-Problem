@@ -79,12 +79,13 @@ public class Timetable {
         for (SE1 se1 : se1List) {
             ArrayList<Integer> teams = (ArrayList<Integer>) se1.getTeams();
             Collections.sort(teams);
-            for (Integer i : teams) {
-                for (Integer j = i+1; j < teams.size(); j++) {
+            for (int i = 0; i < teams.size() - 1; i++) {
+                for (int j = i+1; j < teams.size(); j++) {
                     Match match = timetable2.get(i).get(j);
                     Match match2 = timetable2.get(j).get(i);
                     int maxTimeSlot;
                     int minTimeSlot;
+                    int timeSlotsDiff;
                     if (match.getTimeSlot().getId() > match2.getTimeSlot().getId()) {
                         maxTimeSlot = match.getTimeSlot().getId();
                         minTimeSlot = match2.getTimeSlot().getId();
@@ -92,9 +93,11 @@ public class Timetable {
                         minTimeSlot = match.getTimeSlot().getId();
                         maxTimeSlot = match2.getTimeSlot().getId();
                     }
-                    if (maxTimeSlot - minTimeSlot < se1.getMin()) {
+
+                    timeSlotsDiff = maxTimeSlot - minTimeSlot;
+                    if (timeSlotsDiff < se1.getMin()) {
                         if (se1.isTypeSoft()) {
-                            valuate += se1.getPenalty();
+                            valuate += ((se1.getMin() + 1) - timeSlotsDiff) * se1.getPenalty();
                         }
                     }
                 }
