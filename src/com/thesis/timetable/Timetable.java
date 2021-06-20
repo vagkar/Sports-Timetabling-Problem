@@ -3,6 +3,7 @@ package com.thesis.timetable;
 import com.thesis.instance.constraints.separation.SE1;
 import com.thesis.instance.resources.Slot;
 import com.thesis.solution.games.ScheduledMatch;
+import com.thesis.solution.metadata.ObjectiveValue;
 
 import java.util.*;
 
@@ -74,8 +75,10 @@ public class Timetable {
         return scheduledMatches;
     }
 
-    public int valuateSeparationConstraint(List<SE1> se1List) {
-        int valuate = 0;
+    public ObjectiveValue SE1Penalty(List<SE1> se1List) {
+        ObjectiveValue objectiveValue = new ObjectiveValue();
+        int penalty = 0;
+        int infeasibility = 0;
         for (SE1 se1 : se1List) {
             ArrayList<Integer> teams = (ArrayList<Integer>) se1.getTeams();
             Collections.sort(teams);
@@ -85,7 +88,7 @@ public class Timetable {
                     Match match2 = timetable2.get(j).get(i);
                     int maxTimeSlot;
                     int minTimeSlot;
-                    int timeSlotsDiff;
+                    int deviation;
                     if (match.getTimeSlot().getId() > match2.getTimeSlot().getId()) {
                         maxTimeSlot = match.getTimeSlot().getId();
                         minTimeSlot = match2.getTimeSlot().getId();
@@ -94,15 +97,19 @@ public class Timetable {
                         maxTimeSlot = match2.getTimeSlot().getId();
                     }
 
-                    timeSlotsDiff = maxTimeSlot - minTimeSlot;
-                    if (timeSlotsDiff < se1.getMin()) {
+                    deviation = maxTimeSlot - minTimeSlot;
+                    if (deviation <= se1.getMin()) {
                         if (se1.isTypeSoft()) {
-                            valuate += ((se1.getMin() + 1) - timeSlotsDiff) * se1.getPenalty();
+                            penalty += ((se1.getMin() + 1) - deviation) * se1.getPenalty();
+                        } else {
+                            infeasibility += ((se1.getMin() + 1) - deviation) * se1.getPenalty();
                         }
                     }
                 }
             }
         }
-        return valuate;
+        objectiveValue.setObjective(penalty);
+        objectiveValue.setInfeasibility(infeasibility);
+        return objectiveValue;
     }
 }

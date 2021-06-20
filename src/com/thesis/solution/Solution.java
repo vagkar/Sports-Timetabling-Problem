@@ -2,6 +2,7 @@ package com.thesis.solution;
 
 import com.thesis.solution.games.ScheduledMatch;
 import com.thesis.solution.metadata.MetaData;
+import com.thesis.solution.metadata.ObjectiveValue;
 
 import javax.xml.bind.annotation.*;
 import java.util.List;
@@ -45,9 +46,8 @@ public class Solution {
         metaData.setInstanceName(instanceName);
     }
 
-    public void setObjectiveValue(int infeasibility, int objective) {
-        metaData.getObjectiveValue().setInfeasibility(infeasibility);
-        metaData.getObjectiveValue().setObjective(objective);
+    public void setObjectiveValue(ObjectiveValue objectiveValue) {
+        metaData.setObjectiveValue(objectiveValue);
     }
 
 
