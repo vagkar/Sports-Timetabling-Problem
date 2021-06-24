@@ -99,7 +99,7 @@ public class Timetable {
 
                     deviation = maxTimeSlot - minTimeSlot;
                     if (deviation <= se1.getMin()) {
-                        if (se1.isTypeSoft()) {
+                        if (se1.isSoft()) {
                             penalty += ((se1.getMin() + 1) - deviation) * se1.getPenalty();
                         } else {
                             infeasibility += ((se1.getMin() + 1) - deviation) * se1.getPenalty();

@@ -72,8 +72,12 @@ public class SE1 {
         loadTeams();
     }
 
-    public boolean isTypeSoft() {
+    public boolean isSoft() {
         return soft;
+    }
+
+    private void setSoft(boolean soft) {
+        this.soft = soft;
     }
 
     public String getType() {
@@ -83,6 +87,7 @@ public class SE1 {
     @XmlAttribute(name = "type")
     public void setType(String type) {
         this.type = type;
-        this.soft = this.type.equals("SOFT");
+        setSoft(this.type.equals("SOFT"));
     }
+
 }
