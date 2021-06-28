@@ -1,5 +1,6 @@
 package com.thesis.timetable;
 
+import com.thesis.instance.constraints.capacity.CA1;
 import com.thesis.instance.constraints.separation.SE1;
 import com.thesis.instance.resources.Slot;
 import com.thesis.solution.games.ScheduledMatch;
@@ -73,6 +74,14 @@ public class Timetable {
             }
         }
         return scheduledMatches;
+    }
+
+    public ObjectiveValue CA1Penalty(List<CA1> ca1List) {
+        ObjectiveValue objectiveValue = new ObjectiveValue();
+        int penalty = 0;
+        int infeasibility = 0;
+        
+        return objectiveValue;
     }
 
     public ObjectiveValue SE1Penalty(List<SE1> se1List) {
