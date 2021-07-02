@@ -1,5 +1,6 @@
 package com.thesis.timetable;
 
+import com.thesis.instance.Instance;
 import com.thesis.instance.constraints.capacity.CA1;
 import com.thesis.instance.constraints.separation.SE1;
 import com.thesis.instance.resources.Slot;
@@ -14,11 +15,14 @@ public class Timetable {
 
     private Match[][] timetable;
 
+    private Match[][] timetable3;
+
     public Timetable(int numberOfTeams , int timeSlots) {
         this.timetable = new Match[(numberOfTeams / 2)][timeSlots];
         for (int i = 0; i < numberOfTeams; i++) {
             this.timetable2.add(new HashMap<>());
         }
+        this.setTimetable3(new Match[numberOfTeams][timeSlots]);
     }
 
     public Match[][] getTimetable() {
@@ -29,8 +33,8 @@ public class Timetable {
         this.timetable = timetable.clone();
     }
 
-    public void add(int period, int timeslot, Match match) {
-        this.timetable[period][timeslot] = match;
+    public void add(int period, int timeSlot, Match match) {
+        this.timetable[period][timeSlot] = match;
     }
 
     public void printTimetable() {
@@ -62,6 +66,21 @@ public class Timetable {
         this.timetable2 = timetable1;
     }
 
+    public Match[][] getTimetable3() {
+        return this.timetable3;
+    }
+
+    public void setTimetable3(Match[][] timetable3) {
+        this.timetable3 = timetable3.clone();
+    }
+
+    public void  addToTimetable3(int homeTeam, int timeSlot, Match match) {
+        this.timetable3[homeTeam][timeSlot] = new Match(match.getHome(), match.getAway(), match.getTimeSlot());
+        this.timetable3[homeTeam][timeSlot].setStatus("H");
+        this.timetable3[match.getAway().getId()][timeSlot] = new Match(match.getHome(), match.getAway(), match.getTimeSlot());
+        this.timetable3[match.getAway().getId()][timeSlot].setStatus("A");
+    }
+
     public List<ScheduledMatch> getScheduleMatches() {
         List<ScheduledMatch> scheduledMatches = new ArrayList<>();
         int periods = timetable.length;
@@ -77,15 +96,32 @@ public class Timetable {
     }
 
     public ObjectiveValue CA1Penalty(List<CA1> ca1List) {
-        ObjectiveValue objectiveValue = new ObjectiveValue();
         int penalty = 0;
         int infeasibility = 0;
-        
-        return objectiveValue;
+        for (CA1 ca1 : ca1List) {
+            if (ca1.isSoft())
+                continue;
+            int c = 0;
+            Integer team = ca1.getTeams();
+            String mode = ca1.getMode();
+            for (Integer slot : ca1.getSlots()) {
+                String slotStatus = timetable3[team][slot].getStatus();
+                if (slotStatus.equals(mode))
+                    c++;
+            }
+            if (c > ca1.getMax()) {
+                int deviation = c - ca1.getMax();
+                if (ca1.isSoft()) {
+                    penalty += deviation * ca1.getPenalty();
+                } else {
+                    infeasibility += deviation * ca1.getPenalty();
+                }
+            }
+        }
+        return new ObjectiveValue(infeasibility, penalty);
     }
 
     public ObjectiveValue SE1Penalty(List<SE1> se1List) {
-        ObjectiveValue objectiveValue = new ObjectiveValue();
         int penalty = 0;
         int infeasibility = 0;
         for (SE1 se1 : se1List) {
@@ -117,8 +153,20 @@ public class Timetable {
                 }
             }
         }
-        objectiveValue.setObjective(penalty);
-        objectiveValue.setInfeasibility(infeasibility);
-        return objectiveValue;
+        return new ObjectiveValue(infeasibility, penalty);
+    }
+
+    public ObjectiveValue computePenalties(Instance instance) {
+        int infeasibility = 0;
+        int penalty = 0;
+        //SE1
+        ObjectiveValue objectiveValue = SE1Penalty(instance.getConstraints().getSE1());
+        infeasibility += objectiveValue.getInfeasibility();
+        penalty += objectiveValue.getObjective();
+        //CA1
+        objectiveValue = CA1Penalty(instance.getConstraints().getCA1());
+        infeasibility += objectiveValue.getInfeasibility();
+        penalty += objectiveValue.getObjective();
+        return new ObjectiveValue(infeasibility, penalty);
     }
 }

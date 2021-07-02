@@ -22,7 +22,7 @@ public class App {
         Timetable timetable = timetableScheduler.schedule();
 
         Solution solution = new Solution();
-        solution.setObjectiveValue(timetable.SE1Penalty(instance.getConstraints().getSE1()));
+        solution.setObjectiveValue(timetable.computePenalties(instance));
         solution.setGames(timetable.getScheduleMatches());
 
         parseXML.marshall(solution);

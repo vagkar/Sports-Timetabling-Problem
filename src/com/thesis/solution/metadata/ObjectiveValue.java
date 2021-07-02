@@ -14,11 +14,11 @@ public class ObjectiveValue {
     public ObjectiveValue() {
 
     }
-//
-//    public ObjectiveValue(int infeasibility, int objective) {
-//        setInfeasibility(infeasibility);
-//        setObjective(objective);
-//    }
+
+    public ObjectiveValue(int infeasibility, int objective) {
+        setInfeasibility(infeasibility);
+        setObjective(objective);
+    }
 
     @XmlAttribute(name = "infeasibility")
     public int getInfeasibility() {

@@ -8,6 +8,7 @@ public class Match {
     private Team home;
     private Team away;
     private Slot timeSlot;
+    private String status;
 
     public Match(Team home, Team away, Slot timeSlot) {
         this.setHome(home);
@@ -37,5 +38,13 @@ public class Match {
 
     public void setAway(Team away) {
         this.away = away;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
