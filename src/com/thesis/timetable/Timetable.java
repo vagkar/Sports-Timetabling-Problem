@@ -3,6 +3,7 @@ package com.thesis.timetable;
 import com.thesis.instance.Instance;
 import com.thesis.instance.constraints.capacity.CA1;
 import com.thesis.instance.constraints.capacity.CA2;
+import com.thesis.instance.constraints.capacity.CA3;
 import com.thesis.instance.constraints.separation.SE1;
 import com.thesis.instance.resources.Slot;
 import com.thesis.solution.games.ScheduledMatch;
@@ -155,6 +156,45 @@ public class Timetable {
         return new ObjectiveValue(infeasibility, penalty);
     }
 
+    public ObjectiveValue CA3Penalty(List<CA3> ca3List, int numberOfSlots) {
+        int penalty = 0;
+        int infeasibility = 0;
+        for (CA3 ca3 : ca3List) {
+            String mode1 = ca3.getMode1();
+            for (Integer teams1 : ca3.getTeams1()) {
+                List<Boolean> penaltySlots = new ArrayList<>(Arrays.asList(new Boolean[numberOfSlots]));
+                Collections.fill(penaltySlots, false);
+                for (Integer teams2 : ca3.getTeams2()) {
+                    if (teams1 == teams2)
+                        continue;
+                    if (mode1.equals("H") || mode1.equals("HA")) {
+                        penaltySlots.set(timetable2.get(teams1).get(teams2).getTimeSlot().getId(), true);
+                    }
+                    if (mode1.equals("A") || mode1.equals("HA")) {
+                        penaltySlots.set(timetable2.get(teams2).get(teams1).getTimeSlot().getId(), true);
+                    }
+                }
+                for (int i = 0; i < (penaltySlots.size() - ca3.getIntp() + 1); i++) {
+                    int c = 0;
+                    for (int j = 0; j < ca3.getIntp(); j++) {
+                        if (penaltySlots.get(i + j)) {
+                            c++;
+                        }
+                    }
+                    if (c > ca3.getMax()){
+                        int deviation = c - ca3.getMax();
+                        if (ca3.isSoft()) {
+                            penalty += deviation * ca3.getPenalty();
+                        } else {
+                            infeasibility += deviation * ca3.getPenalty();
+                        }
+                    }
+                }
+            }
+        }
+        return new ObjectiveValue(infeasibility, penalty);
+    }
+
     public ObjectiveValue SE1Penalty(List<SE1> se1List) {
         int penalty = 0;
         int infeasibility = 0;
@@ -193,18 +233,30 @@ public class Timetable {
     public ObjectiveValue computePenalties(Instance instance) {
         int infeasibility = 0;
         int penalty = 0;
-        //SE1
-        ObjectiveValue objectiveValue = SE1Penalty(instance.getConstraints().getSE1());
-        infeasibility += objectiveValue.getInfeasibility();
-        penalty += objectiveValue.getObjective();
         //CA1
-        objectiveValue = CA1Penalty(instance.getConstraints().getCA1());
-        infeasibility += objectiveValue.getInfeasibility();
-        penalty += objectiveValue.getObjective();
+        if (instance.getConstraints().getCA1() != null) {
+            ObjectiveValue objectiveValue = CA1Penalty(instance.getConstraints().getCA1());
+            infeasibility += objectiveValue.getInfeasibility();
+            penalty += objectiveValue.getObjective();
+        }
         //CA2
-        objectiveValue = CA2Penalty(instance.getConstraints().getCA2());
-        infeasibility += objectiveValue.getInfeasibility();
-        penalty += objectiveValue.getObjective();
+        if (instance.getConstraints().getCA2() != null) {
+            ObjectiveValue objectiveValue = CA2Penalty(instance.getConstraints().getCA2());
+            infeasibility += objectiveValue.getInfeasibility();
+            penalty += objectiveValue.getObjective();
+        }
+        //CA3
+        if (instance.getConstraints().getCA3() != null) {
+            ObjectiveValue objectiveValue = CA3Penalty(instance.getConstraints().getCA3(), instance.getResources().getSlots().size());
+            infeasibility += objectiveValue.getInfeasibility();
+            penalty += objectiveValue.getObjective();
+        }
+        //SE1
+        if (instance.getConstraints().getSE1() != null) {
+            ObjectiveValue objectiveValue = SE1Penalty(instance.getConstraints().getSE1());
+            infeasibility += objectiveValue.getInfeasibility();
+            penalty += objectiveValue.getObjective();
+        }
         return new ObjectiveValue(infeasibility, penalty);
     }
 }
