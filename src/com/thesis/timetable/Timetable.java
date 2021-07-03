@@ -2,6 +2,7 @@ package com.thesis.timetable;
 
 import com.thesis.instance.Instance;
 import com.thesis.instance.constraints.capacity.CA1;
+import com.thesis.instance.constraints.capacity.CA2;
 import com.thesis.instance.constraints.separation.SE1;
 import com.thesis.instance.resources.Slot;
 import com.thesis.solution.games.ScheduledMatch;
@@ -99,8 +100,8 @@ public class Timetable {
         int penalty = 0;
         int infeasibility = 0;
         for (CA1 ca1 : ca1List) {
-            if (ca1.isSoft())
-                continue;
+//            if (ca1.isSoft())
+//                continue;
             int c = 0;
             Integer team = ca1.getTeams();
             String mode = ca1.getMode();
@@ -115,6 +116,39 @@ public class Timetable {
                     penalty += deviation * ca1.getPenalty();
                 } else {
                     infeasibility += deviation * ca1.getPenalty();
+                }
+            }
+        }
+        return new ObjectiveValue(infeasibility, penalty);
+    }
+
+    public ObjectiveValue CA2Penalty(List<CA2> ca2List) {
+        int penalty = 0;
+        int infeasibility = 0;
+        for (CA2 ca2 : ca2List) {
+            int c = 0;
+            String mode1 = ca2.getMode1();
+            Integer teams1 = ca2.getTeams1();
+            for (Integer teams2 : ca2.getTeams2()) {
+                Integer slot = timetable2.get(teams1).get(teams2).getTimeSlot().getId();
+                if (ca2.getSlots().contains(slot)) {
+                    if (mode1.equals("H") || mode1.equals("HA")) {
+                        c++;
+                    }
+                }
+                slot = timetable2.get(teams2).get(teams1).getTimeSlot().getId();
+                if (ca2.getSlots().contains(slot)) {
+                    if (mode1.equals("A") || mode1.equals("HA")) {
+                        c++;
+                    }
+                }
+            }
+            if (c > ca2.getMax()) {
+                int deviation = c - ca2.getMax();
+                if (ca2.isSoft()) {
+                    penalty += deviation * ca2.getPenalty();
+                } else {
+                    infeasibility += deviation * ca2.getPenalty();
                 }
             }
         }
@@ -165,6 +199,10 @@ public class Timetable {
         penalty += objectiveValue.getObjective();
         //CA1
         objectiveValue = CA1Penalty(instance.getConstraints().getCA1());
+        infeasibility += objectiveValue.getInfeasibility();
+        penalty += objectiveValue.getObjective();
+        //CA2
+        objectiveValue = CA2Penalty(instance.getConstraints().getCA2());
         infeasibility += objectiveValue.getInfeasibility();
         penalty += objectiveValue.getObjective();
         return new ObjectiveValue(infeasibility, penalty);
