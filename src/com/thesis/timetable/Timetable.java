@@ -4,6 +4,7 @@ import com.thesis.instance.Instance;
 import com.thesis.instance.constraints.capacity.CA1;
 import com.thesis.instance.constraints.capacity.CA2;
 import com.thesis.instance.constraints.capacity.CA3;
+import com.thesis.instance.constraints.capacity.CA4;
 import com.thesis.instance.constraints.separation.SE1;
 import com.thesis.instance.resources.Slot;
 import com.thesis.solution.games.ScheduledMatch;
@@ -195,6 +196,91 @@ public class Timetable {
         return new ObjectiveValue(infeasibility, penalty);
     }
 
+    public ObjectiveValue CA4Penalty(List<CA4> ca4List) {
+        int infeasibility = 0;
+        int penalty = 0;
+        for (CA4 ca4 : ca4List) {
+            String mode1 = ca4.getMode1();
+            String mode2 = ca4.getMode2();
+            ArrayList<Integer> teams1 = (ArrayList<Integer>) ca4.getTeams1();
+            ArrayList<Integer> teams2 = (ArrayList<Integer>) ca4.getTeams2();
+            ArrayList<Integer> slots = (ArrayList<Integer>) ca4.getSlots();
+            int max = ca4.getMax();
+            if (mode2.equals("GLOBAL")) {
+                int c = 0;
+                for (Integer team1 : teams1) {
+                    for (Integer team2 : teams2) {
+                        if (team1.equals(team2))
+                            continue;
+                        switch (mode1) {
+                            case "H":
+                                if (slots.contains(timetable2.get(team1).get(team2).getTimeSlot().getId())) {
+                                    c++;
+                                }
+                                break;
+                            case "A":
+                                if (slots.contains(timetable2.get(team2).get(team1).getTimeSlot().getId())) {
+                                    c++;
+                                }
+                                break;
+                            case "HA":
+                                if (slots.contains(timetable2.get(team1).get(team2).getTimeSlot().getId())
+                                        || slots.contains(timetable2.get(team2).get(team1).getTimeSlot().getId())) {
+                                    c++;
+                                }
+                                break;
+                        }
+                    }
+                }
+                if (c > max) {
+                    int deviation = c - max;
+                    if (ca4.isSoft()) {
+                        penalty += deviation * ca4.getPenalty();
+                    } else {
+                        infeasibility += deviation * ca4.getPenalty();
+                    }
+                }
+            } else if (mode2.equals("EVERY")) {
+                for (Integer slot : slots) {
+                    int c = 0;
+                    for (Integer team1 : teams1) {
+                        for (Integer team2 : teams2) {
+                            if (team1.equals(team2))
+                                continue;
+                            switch (mode1) {
+                                case "H":
+                                    if (slot.equals(timetable2.get(team1).get(team2).getTimeSlot().getId())) {
+                                        c++;
+                                    }
+                                    break;
+                                case "A":
+                                    if (slot.equals(timetable2.get(team2).get(team1).getTimeSlot().getId())) {
+                                        c++;
+                                    }
+                                    break;
+
+                                case "HA":
+                                    if (slot.equals(timetable2.get(team1).get(team2).getTimeSlot().getId())
+                                    || slot.equals(timetable2.get(team2).get(team1).getTimeSlot().getId())) {
+                                        c++;
+                                    }
+                            }
+                        }
+                    }
+                    if (c > max) {
+                        int deviation = c - max;
+                        if (ca4.isSoft()) {
+                            penalty += deviation * ca4.getPenalty();
+                        } else {
+                            infeasibility += deviation * ca4.getPenalty();
+                        }
+                    }
+                }
+            }
+        }
+        return new ObjectiveValue(infeasibility, penalty);
+    }
+
     public ObjectiveValue SE1Penalty(List<SE1> se1List) {
         int penalty = 0;
         int infeasibility = 0;
@@ -248,6 +334,12 @@ public class Timetable {
         //CA3
         if (instance.getConstraints().getCA3() != null) {
             ObjectiveValue objectiveValue = CA3Penalty(instance.getConstraints().getCA3(), instance.getResources().getSlots().size());
+            infeasibility += objectiveValue.getInfeasibility();
+            penalty += objectiveValue.getObjective();
+        }
+        //CA4
+        if (instance.getConstraints().getCA4() != null) {
+            ObjectiveValue objectiveValue = CA4Penalty(instance.getConstraints().getCA4());
             infeasibility += objectiveValue.getInfeasibility();
             penalty += objectiveValue.getObjective();
         }
