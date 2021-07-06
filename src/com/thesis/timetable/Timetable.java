@@ -5,6 +5,7 @@ import com.thesis.instance.constraints.capacity.CA1;
 import com.thesis.instance.constraints.capacity.CA2;
 import com.thesis.instance.constraints.capacity.CA3;
 import com.thesis.instance.constraints.capacity.CA4;
+import com.thesis.instance.constraints.game.GA1;
 import com.thesis.instance.constraints.separation.SE1;
 import com.thesis.instance.resources.Slot;
 import com.thesis.solution.games.ScheduledMatch;
@@ -281,6 +282,32 @@ public class Timetable {
         return new ObjectiveValue(infeasibility, penalty);
     }
 
+    public ObjectiveValue GA1Penalty(List<GA1> ga1List) {
+        int infeasibility = 0;
+        int penalty = 0;
+        for (GA1 ga1 : ga1List) {
+            int c = 0;
+            List<Integer> meetings = ga1.getMeetings();
+            for (int i = 0; i < meetings.size(); i+=2) {
+                if (ga1.getSlots().contains(timetable2.get(meetings.get(i)).get(meetings.get(i + 1)).getTimeSlot().getId())) {
+                    c++;
+                }
+            }
+            int deviation = 0;
+            if (c > ga1.getMax()) {
+                deviation = c - ga1.getMax();
+            } else if (c < ga1.getMin()) {
+                deviation = ga1.getMin() - c;
+            }
+            if (ga1.isSoft()) {
+                penalty += deviation * ga1.getPenalty();
+            } else {
+                infeasibility += deviation * ga1.getPenalty();
+            }
+        }
+        return new ObjectiveValue(infeasibility, penalty);
+    }
+
     public ObjectiveValue SE1Penalty(List<SE1> se1List) {
         int penalty = 0;
         int infeasibility = 0;
@@ -340,6 +367,12 @@ public class Timetable {
         //CA4
         if (instance.getConstraints().getCA4() != null) {
             ObjectiveValue objectiveValue = CA4Penalty(instance.getConstraints().getCA4());
+            infeasibility += objectiveValue.getInfeasibility();
+            penalty += objectiveValue.getObjective();
+        }
+        //GA1
+        if (instance.getConstraints().getGa1Constraints() != null) {
+            ObjectiveValue objectiveValue = GA1Penalty(instance.getConstraints().getGa1Constraints());
             infeasibility += objectiveValue.getInfeasibility();
             penalty += objectiveValue.getObjective();
         }
