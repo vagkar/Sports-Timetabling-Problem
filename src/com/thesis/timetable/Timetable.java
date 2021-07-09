@@ -2,6 +2,7 @@ package com.thesis.timetable;
 
 import com.thesis.instance.Instance;
 import com.thesis.instance.constraints.br.BR1;
+import com.thesis.instance.constraints.br.BR2;
 import com.thesis.instance.constraints.capacity.CA1;
 import com.thesis.instance.constraints.capacity.CA2;
 import com.thesis.instance.constraints.capacity.CA3;
@@ -346,9 +347,18 @@ public class Timetable {
         return new ObjectiveValue(infeasibility, penalty);
     }
 
-    public ObjectiveValue SE1Penalty(List<SE1> se1List) {
-        int penalty = 0;
+    public ObjectiveValue BR2Penalty(List<BR2> br2List) {
         int infeasibility = 0;
+        int penalty = 0;
+        for (BR2 br2 : br2List) {
+
+        }
+        return new ObjectiveValue(infeasibility, penalty);
+    }
+
+    public ObjectiveValue SE1Penalty(List<SE1> se1List) {
+        int infeasibility = 0;
+        int penalty = 0;
         for (SE1 se1 : se1List) {
             ArrayList<Integer> teams = (ArrayList<Integer>) se1.getTeams();
             Collections.sort(teams);
@@ -417,6 +427,12 @@ public class Timetable {
         //BR1
         if (instance.getConstraints().getBR1() != null) {
             ObjectiveValue objectiveValue = BR1Penalty(instance.getConstraints().getBR1());
+            infeasibility += objectiveValue.getInfeasibility();
+            penalty += objectiveValue.getObjective();
+        }
+        //BR2
+        if (instance.getConstraints().getBR2() != null) {
+            ObjectiveValue objectiveValue = BR2Penalty(instance.getConstraints().getBR2());
             infeasibility += objectiveValue.getInfeasibility();
             penalty += objectiveValue.getObjective();
         }
