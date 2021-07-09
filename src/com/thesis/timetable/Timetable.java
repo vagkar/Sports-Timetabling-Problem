@@ -394,6 +394,24 @@ public class Timetable {
                     homeMatches.put(new Pair<>(team, slot), h);
                 }
             }
+            for (Integer team1 : fa2.getTeams()) {
+                for (Integer team2 : fa2.getTeams()) {
+                    if (team1.equals(team2))
+                        continue;
+                    for (Integer slot : fa2.getSlots()) {
+                        int diff = Math.abs(homeMatches.get(new Pair<>(team1, slot))
+                                - homeMatches.get(new Pair<>(team2, slot)));
+                        if (diff > fa2.getIntp()) {
+                            int deviation = diff - fa2.getIntp();
+                            if (fa2.isSoft()) {
+                                penalty += deviation * fa2.getPenalty();
+                            } else {
+                                infeasibility += deviation * fa2.getPenalty();
+                            }
+                        }
+                    }
+                }
+            }
         }
         return new ObjectiveValue(infeasibility, penalty);
     }
@@ -475,6 +493,12 @@ public class Timetable {
         //BR2
         if (instance.getConstraints().getBR2() != null) {
             ObjectiveValue objectiveValue = BR2Penalty(instance.getConstraints().getBR2());
+            infeasibility += objectiveValue.getInfeasibility();
+            penalty += objectiveValue.getObjective();
+        }
+        //FA2
+        if (instance.getConstraints().getFa2Constraints() != null) {
+            ObjectiveValue objectiveValue = FA2Penalty(instance.getConstraints().getFa2Constraints());
             infeasibility += objectiveValue.getInfeasibility();
             penalty += objectiveValue.getObjective();
         }
