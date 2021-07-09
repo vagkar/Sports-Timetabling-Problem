@@ -7,11 +7,13 @@ import com.thesis.instance.constraints.capacity.CA1;
 import com.thesis.instance.constraints.capacity.CA2;
 import com.thesis.instance.constraints.capacity.CA3;
 import com.thesis.instance.constraints.capacity.CA4;
+import com.thesis.instance.constraints.fairness.FA2;
 import com.thesis.instance.constraints.game.GA1;
 import com.thesis.instance.constraints.separation.SE1;
 import com.thesis.instance.resources.Slot;
 import com.thesis.solution.games.ScheduledMatch;
 import com.thesis.solution.metadata.ObjectiveValue;
+import javafx.util.Pair;
 
 import java.util.*;
 
@@ -371,6 +373,25 @@ public class Timetable {
                     penalty += deviation * br2.getPenalty();
                 } else {
                     infeasibility += deviation * br2.getPenalty();
+                }
+            }
+        }
+        return new ObjectiveValue(infeasibility, penalty);
+    }
+
+    public ObjectiveValue FA2Penalty(List<FA2> fa2List) {
+        int infeasibility = 0;
+        int penalty = 0;
+        for (FA2 fa2 : fa2List) {
+            HashMap<Pair<Integer, Integer>, Integer> homeMatches = new HashMap<>();
+            for (Integer team : fa2.getTeams()) {
+                Integer h = 0;
+                for (Integer slot : fa2.getSlots()) {
+                    String slotStatus = timetable3[team][slot].getStatus();
+                    if (slotStatus.equals("H")) {
+                        h++;
+                    }
+                    homeMatches.put(new Pair<>(team, slot), h);
                 }
             }
         }
