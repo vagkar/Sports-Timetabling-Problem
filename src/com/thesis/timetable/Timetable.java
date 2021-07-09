@@ -351,7 +351,28 @@ public class Timetable {
         int infeasibility = 0;
         int penalty = 0;
         for (BR2 br2 : br2List) {
-
+            int breaks = 0;
+            for (Integer team : br2.getTeams()) {
+                ArrayList<Integer> slots = (ArrayList<Integer>) br2.getSlots();
+                for (int i = 0; i < slots.size() - 1; i++) {
+                    Integer slot = slots.get(i);
+                    if (slot == slots.size() - 1)
+                        continue;
+                    String slotStatus = timetable3[team][slot].getStatus();
+                    String nextSlotStatus = timetable3[team][slot + 1].getStatus();
+                    if (slotStatus.equals(nextSlotStatus)) {
+                        breaks++;
+                    }
+                }
+            }
+            if (breaks > br2.getIntp()) {
+                int deviation = breaks - br2.getIntp();
+                if (br2.isSoft()) {
+                    penalty += deviation * br2.getPenalty();
+                } else {
+                    infeasibility += deviation * br2.getPenalty();
+                }
+            }
         }
         return new ObjectiveValue(infeasibility, penalty);
     }
