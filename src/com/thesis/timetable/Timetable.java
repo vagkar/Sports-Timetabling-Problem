@@ -1,6 +1,7 @@
 package com.thesis.timetable;
 
 import com.thesis.instance.Instance;
+import com.thesis.instance.constraints.br.BR1;
 import com.thesis.instance.constraints.capacity.CA1;
 import com.thesis.instance.constraints.capacity.CA2;
 import com.thesis.instance.constraints.capacity.CA3;
@@ -308,6 +309,43 @@ public class Timetable {
         return new ObjectiveValue(infeasibility, penalty);
     }
 
+    public ObjectiveValue BR1Penalty(List<BR1> br1List) {
+        int infeasibility = 0;
+        int penalty = 0;
+        for (BR1 br1 : br1List) {
+            int breaks = 0;
+            int team = br1.getTeams();
+            for (Integer slot : br1.getSlots()) {
+                if (slot == 0)
+                    continue;
+                String slotStatus = timetable3[team][slot].getStatus();
+                String prevSlotStatus = timetable3[team][slot - 1].getStatus();
+                if (br1.getMode2().equals("H")) {
+                    if (slotStatus.equals("H") && prevSlotStatus.equals("H")) {
+                        breaks++;
+                    }
+                } else if (br1.getMode2().equals("A")) {
+                    if (slotStatus.equals("A") && prevSlotStatus.equals("A")) {
+                        breaks++;
+                    }
+                } else if (br1.getMode2().equals("HA")) {
+                    if (slotStatus.equals(prevSlotStatus)) {
+                        breaks++;
+                    }
+                }
+            }
+            if (breaks > br1.getIntp()) {
+                int deviation = breaks - br1.getIntp();
+                if (br1.isSoft()) {
+                    penalty += deviation * br1.getPenalty();
+                } else {
+                    infeasibility += deviation * br1.getPenalty();
+                }
+            }
+        }
+        return new ObjectiveValue(infeasibility, penalty);
+    }
+
     public ObjectiveValue SE1Penalty(List<SE1> se1List) {
         int penalty = 0;
         int infeasibility = 0;
@@ -373,6 +411,12 @@ public class Timetable {
         //GA1
         if (instance.getConstraints().getGa1Constraints() != null) {
             ObjectiveValue objectiveValue = GA1Penalty(instance.getConstraints().getGa1Constraints());
+            infeasibility += objectiveValue.getInfeasibility();
+            penalty += objectiveValue.getObjective();
+        }
+        //BR1
+        if (instance.getConstraints().getBR1() != null) {
+            ObjectiveValue objectiveValue = BR1Penalty(instance.getConstraints().getBR1());
             infeasibility += objectiveValue.getInfeasibility();
             penalty += objectiveValue.getObjective();
         }
