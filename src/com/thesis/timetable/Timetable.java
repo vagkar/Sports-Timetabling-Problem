@@ -19,6 +19,21 @@ import java.util.*;
 
 public class Timetable {
 
+    /*
+    * hashMapSchedule = 1(team), 5(team) : 0(slot)
+    *
+    * hashMapSlot = 1(team), 0(slot) : 6(team)
+    *
+    * hashMapStatus = 1(team), 0(slot) : True(home)
+    * */
+
+    private HashMap<Pair<Integer, Integer>, Integer> hashMapSchedule = new HashMap<>();
+
+    private HashMap<Pair<Integer, Integer>, Integer> hashMapSlot = new HashMap<>();
+
+    private HashMap<Pair<Integer, Integer>, Boolean> hashMapStatus = new HashMap<>();
+
+
     private List<HashMap<Integer, Match>> timetable2 = new ArrayList<>();
 
     private Match[][] timetable;
