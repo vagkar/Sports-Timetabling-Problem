@@ -46,12 +46,14 @@ public class CircleMethod implements ScheduleMethod {
                     Match match = new Match(constantTeam, awayTeams.get(j), slots.get(i));
                     timetable.add(j,i,match); //add for 2d Array
                     timetable.put(match); //put for Array of HashMaps
+                    timetable.putSchedule(match);
                     timetable.addToTimetable3(match.getHome().getId(),i,match);
                     continue;
                 }
                 Match match = new Match(homeTeams.get(j - 1), awayTeams.get(j), slots.get(i));
                 timetable.add(j,i,match);
                 timetable.put(match);
+                timetable.putSchedule(match);
                 timetable.addToTimetable3(match.getHome().getId(),i,match);
             }
 
@@ -67,12 +69,14 @@ public class CircleMethod implements ScheduleMethod {
                     Match match = new Match(awayTeams.get(j), constantTeam, slots.get(i));
                     timetable.add(j,i,match);
                     timetable.put(match);
+                    timetable.putSchedule(match);
                     timetable.addToTimetable3(match.getHome().getId(),i,match);
                     continue;
                 }
                 Match match = new Match(awayTeams.get(j), homeTeams.get(j - 1), slots.get(i));
                 timetable.add(j,i,match);
                 timetable.put(match);
+                timetable.putSchedule(match);
                 timetable.addToTimetable3(match.getHome().getId(),i,match);
             }
 

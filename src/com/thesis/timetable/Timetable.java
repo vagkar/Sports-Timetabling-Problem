@@ -33,6 +33,27 @@ public class Timetable {
 
     private HashMap<Pair<Integer, Integer>, Boolean> hashMapStatus = new HashMap<>();
 
+    public void putSchedule(Match match) {
+        this.hashMapSchedule.put(new Pair<>(match.getHome().getId(), match.getAway().getId()),
+                match.getTimeSlot().getId());
+
+        putSlot(match);
+        putStatus(match);
+    }
+
+    private void putSlot(Match match) {
+        this.hashMapSlot.put(new Pair<>(match.getHome().getId(), match.getTimeSlot().getId()),
+                match.getAway().getId());
+        this.hashMapSlot.put(new Pair<>(match.getAway().getId(), match.getTimeSlot().getId()),
+                match.getHome().getId());
+    }
+
+    private void putStatus(Match match) {
+        this.hashMapStatus.put(new Pair<>(match.getHome().getId(), match.getTimeSlot().getId()),
+                true);
+        this.hashMapStatus.put(new Pair<>(match.getAway().getId(), match.getTimeSlot().getId()),
+                false);
+    }
 
     private List<HashMap<Integer, Match>> timetable2 = new ArrayList<>();
 

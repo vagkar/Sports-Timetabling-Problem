@@ -3,7 +3,7 @@
     <MetaData>
         <SolutionName>Solution-Test Instance 1.xml</SolutionName>
         <InstanceName>Test Instance 1</InstanceName>
-        <ObjectiveValue infeasibility="14" objective="1250"/>
+        <ObjectiveValue infeasibility="28" objective="1250"/>
     </MetaData>
     <Games>
         <ScheduledMatch home="0" away="5" slot="0"/>
