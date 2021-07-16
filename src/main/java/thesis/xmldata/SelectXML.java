@@ -38,6 +38,10 @@ public class SelectXML {
         fileName = pathToFilesFolder + xmlNames[option - 1];
     }
 
+    public SelectXML(int option) {
+        this.fileName = pathToFilesFolder + xmlNames[option - 1];
+    }
+
     public File getSelectedFile(){
         return new File(fileName);
     }

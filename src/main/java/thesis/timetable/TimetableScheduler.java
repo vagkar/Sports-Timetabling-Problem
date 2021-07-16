@@ -41,4 +41,25 @@ public class TimetableScheduler {
                 return selectScheduleMethod();
         }
     }
+
+    public Timetable schedule(int option) {
+        ScheduleMethod scheduleMethod = selectScheduleMethod(option);
+        this.timetable = scheduleMethod.schedule();
+        this.timetable.printTimetable();
+        return this.timetable;
+    }
+
+    private ScheduleMethod selectScheduleMethod(int option) {
+        switch (option) {
+            case 0:
+                System.exit(-1);
+
+            case 1:
+                return new CircleMethod(numberOfTeams, instance);
+
+            default:
+                System.out.println("Select a valid number from 1 to 1 or 0 to exit!");
+                return selectScheduleMethod();
+        }
+    }
 }

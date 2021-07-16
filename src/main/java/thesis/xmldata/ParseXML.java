@@ -35,6 +35,15 @@ public class ParseXML {
         setInstance(instance);
     }
 
+    public void unmarshall(int option) throws JAXBException {
+        this.file = new SelectXML(option).getSelectedFile();
+        JAXBContext jaxbContext = JAXBContext.newInstance(Instance.class);
+
+        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+        Instance instance = (Instance) unmarshaller.unmarshal(file);
+        setInstance(instance);
+    }
+
     public void marshall(Solution solution) throws JAXBException {
         JAXBContext jaxbContext = JAXBContext.newInstance(Solution.class);
         Marshaller marshaller = jaxbContext.createMarshaller();
