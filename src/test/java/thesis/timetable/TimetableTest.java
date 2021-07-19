@@ -24,7 +24,7 @@ class TimetableTest {
         } catch (JAXBException e) {
             e.printStackTrace();
         }
-        TimetableScheduler timetableScheduler = new TimetableScheduler(instance.getResources().getTeams().size(), instance);
+        TimetableScheduler timetableScheduler = new TimetableScheduler(instance);
         timetable = timetableScheduler.schedule(1);
     }
 
@@ -45,8 +45,8 @@ class TimetableTest {
     @Test
     void CA3PenaltyTest() {
         ObjectiveValue objectiveValue = timetable.CA3Penalty(instance.getConstraints().getCA3(), instance.getResources().getSlots().size());
-        Assertions.assertEquals(8, objectiveValue.getInfeasibility());
-        Assertions.assertEquals(330, objectiveValue.getObjective());
+        Assertions.assertEquals(36, objectiveValue.getInfeasibility());
+        Assertions.assertEquals(985, objectiveValue.getObjective());
     }
 
     @Test
@@ -73,7 +73,7 @@ class TimetableTest {
     @Test
     void BR2PenaltyTest() {
         ObjectiveValue objectiveValue = timetable.BR2Penalty(instance.getConstraints().getBR2());
-        Assertions.assertEquals(14, objectiveValue.getInfeasibility());
+        Assertions.assertEquals(18, objectiveValue.getInfeasibility());
         Assertions.assertEquals(0, objectiveValue.getObjective());
     }
 
@@ -94,7 +94,7 @@ class TimetableTest {
     @Test
     void computePenaltiesTest() {
         ObjectiveValue objectiveValue = timetable.computePenalties(instance);
-        Assertions.assertEquals(28, objectiveValue.getInfeasibility());
+        Assertions.assertEquals(32, objectiveValue.getInfeasibility());
         Assertions.assertEquals(1250, objectiveValue.getObjective());
     }
 }

@@ -392,10 +392,10 @@ public class Timetable {
         int penalty = 0;
         for (BR2 br2 : br2List) {
             int breaks = 0;
-            for (Integer team : br2.getTeams()) {
+            for (int team : br2.getTeams()) {
                 ArrayList<Integer> slots = (ArrayList<Integer>) br2.getSlots();
-                for (int i = 0; i < slots.size() - 1; i++) {
-                    Integer slot = slots.get(i);
+                for (int i = 0; i < slots.size(); i++) {
+                    int slot = slots.get(i);
                     if (slot == slots.size() - 1)
                         continue;
                     String slotStatus = hashMapStatus.get(new Pair<>(team, slot)) ? "H" : "A" ;
@@ -418,13 +418,14 @@ public class Timetable {
     }
 
     public ObjectiveValue FA2Penalty(List<FA2> fa2List) {
+        //TODO wrong calculations
         int infeasibility = 0;
         int penalty = 0;
         for (FA2 fa2 : fa2List) {
             HashMap<Pair<Integer, Integer>, Integer> homeMatches = new HashMap<>();
-            for (Integer team : fa2.getTeams()) {
-                Integer h = 0;
-                for (Integer slot : fa2.getSlots()) {
+            for (int team : fa2.getTeams()) {
+                int h = 0;
+                for (int slot : fa2.getSlots()) {
                     String slotStatus = hashMapStatus.get(new Pair<>(team, slot)) ? "H" : "A" ;
                     if (slotStatus.equals("H")) {
                         h++;
@@ -432,20 +433,24 @@ public class Timetable {
                     homeMatches.put(new Pair<>(team, slot), h);
                 }
             }
-            for (Integer team1 : fa2.getTeams()) {
-                for (Integer team2 : fa2.getTeams()) {
-                    if (team1.equals(team2))
+            for (int team1 : fa2.getTeams()) {
+                for (int team2 : fa2.getTeams()) {
+                    int maxDiff = 0;
+                    if (team1 == team2)
                         continue;
-                    for (Integer slot : fa2.getSlots()) {
+                    for (int slot : fa2.getSlots()) {
                         int diff = Math.abs(homeMatches.get(new Pair<>(team1, slot))
                                 - homeMatches.get(new Pair<>(team2, slot)));
-                        if (diff > fa2.getIntp()) {
-                            int deviation = diff - fa2.getIntp();
-                            if (fa2.isSoft()) {
-                                penalty += deviation * fa2.getPenalty();
-                            } else {
-                                infeasibility += deviation * fa2.getPenalty();
-                            }
+                        if (diff > maxDiff) {
+                            maxDiff = diff;
+                        }
+                    }
+                    if (maxDiff > fa2.getIntp()) {
+                        int deviation = maxDiff - fa2.getIntp();
+                        if (fa2.isSoft()) {
+                            penalty += deviation * fa2.getPenalty();
+                        } else {
+                            infeasibility += deviation * fa2.getPenalty();
                         }
                     }
                 }
