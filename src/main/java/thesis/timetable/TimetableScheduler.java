@@ -10,10 +10,8 @@ public class TimetableScheduler {
 
     private Timetable timetable;
     private Instance instance;
-    private int numberOfTeams;
 
-    public TimetableScheduler(int numberOfTeams, Instance instance) {
-        this.numberOfTeams = numberOfTeams;
+    public TimetableScheduler(Instance instance) {
         this.instance = instance;
     }
 
@@ -34,7 +32,7 @@ public class TimetableScheduler {
                 System.exit(-1);
 
             case 1:
-                return new CircleMethod(numberOfTeams, instance);
+                return new CircleMethod(instance);
 
             default:
                 System.out.println("Select a valid number from 1 to 1 or 0 to exit!");
@@ -55,7 +53,7 @@ public class TimetableScheduler {
                 System.exit(-1);
 
             case 1:
-                return new CircleMethod(numberOfTeams, instance);
+                return new CircleMethod(instance);
 
             default:
                 System.out.println("Select a valid number from 1 to 1 or 0 to exit!");

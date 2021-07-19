@@ -14,8 +14,9 @@ public class CircleMethod implements ScheduleMethod {
     private final Instance instance;
     private Timetable timetable;
 
-    public CircleMethod(int numberOfTeams, Instance instance) {
-        this.timetable = new Timetable(numberOfTeams, instance.getResources().getSlots().size());
+    public CircleMethod(Instance instance) {
+        this.timetable = new Timetable(instance.getResources().getTeams().size(),
+                instance.getResources().getSlots().size());
         this.instance = instance;
     }
 

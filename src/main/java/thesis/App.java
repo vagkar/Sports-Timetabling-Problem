@@ -18,7 +18,7 @@ public class App {
         Instance instance = parseXML.getInstance();
 
         ArrayList<Team> teams = (ArrayList<Team>) instance.getResources().getTeams();
-        TimetableScheduler timetableScheduler = new TimetableScheduler(teams.size(), instance);
+        TimetableScheduler timetableScheduler = new TimetableScheduler(instance);
         Timetable timetable = timetableScheduler.schedule();
 
         Solution solution = new Solution();
