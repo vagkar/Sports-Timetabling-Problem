@@ -143,13 +143,11 @@ public class Timetable {
         int penalty = 0;
         int infeasibility = 0;
         for (CA1 ca1 : ca1List) {
-//            if (ca1.isSoft())
-//                continue;
             int c = 0;
-            Integer team = ca1.getTeams();
+            int team = ca1.getTeams();
             String mode = ca1.getMode();
-            for (Integer slot : ca1.getSlots()) {
-                String slotStatus = timetable3[team][slot].getStatus();
+            for (int slot : ca1.getSlots()) {
+                String slotStatus = hashMapStatus.get(new Pair<>(team, slot)) ? "H" : "A";
                 if (slotStatus.equals(mode))
                     c++;
             }
@@ -171,15 +169,15 @@ public class Timetable {
         for (CA2 ca2 : ca2List) {
             int c = 0;
             String mode1 = ca2.getMode1();
-            Integer teams1 = ca2.getTeams1();
-            for (Integer teams2 : ca2.getTeams2()) {
-                Integer slot = timetable2.get(teams1).get(teams2).getTimeSlot().getId();
+            int teams1 = ca2.getTeams1();
+            for (int teams2 : ca2.getTeams2()) {
+                int slot = hashMapSchedule.get(new Pair<>(teams1, teams2));
                 if (ca2.getSlots().contains(slot)) {
                     if (mode1.equals("H") || mode1.equals("HA")) {
                         c++;
                     }
                 }
-                slot = timetable2.get(teams2).get(teams1).getTimeSlot().getId();
+                slot = hashMapSchedule.get(new Pair<>(teams2, teams1));
                 if (ca2.getSlots().contains(slot)) {
                     if (mode1.equals("A") || mode1.equals("HA")) {
                         c++;
@@ -203,17 +201,17 @@ public class Timetable {
         int infeasibility = 0;
         for (CA3 ca3 : ca3List) {
             String mode1 = ca3.getMode1();
-            for (Integer teams1 : ca3.getTeams1()) {
+            for (int teams1 : ca3.getTeams1()) {
                 List<Boolean> penaltySlots = new ArrayList<>(Arrays.asList(new Boolean[numberOfSlots]));
                 Collections.fill(penaltySlots, false);
-                for (Integer teams2 : ca3.getTeams2()) {
+                for (int teams2 : ca3.getTeams2()) {
                     if (teams1 == teams2)
                         continue;
                     if (mode1.equals("H") || mode1.equals("HA")) {
-                        penaltySlots.set(timetable2.get(teams1).get(teams2).getTimeSlot().getId(), true);
+                        penaltySlots.set(hashMapSchedule.get(new Pair<>(teams1, teams2)), true);
                     }
                     if (mode1.equals("A") || mode1.equals("HA")) {
-                        penaltySlots.set(timetable2.get(teams2).get(teams1).getTimeSlot().getId(), true);
+                        penaltySlots.set(hashMapSchedule.get(new Pair<>(teams2, teams1)), true);
                     }
                 }
                 for (int i = 0; i < (penaltySlots.size() - ca3.getIntp() + 1); i++) {
@@ -249,24 +247,24 @@ public class Timetable {
             int max = ca4.getMax();
             if (mode2.equals("GLOBAL")) {
                 int c = 0;
-                for (Integer team1 : teams1) {
-                    for (Integer team2 : teams2) {
-                        if (team1.equals(team2))
+                for (int team1 : teams1) {
+                    for (int team2 : teams2) {
+                        if (team1 == team2)
                             continue;
                         switch (mode1) {
                             case "H":
-                                if (slots.contains(timetable2.get(team1).get(team2).getTimeSlot().getId())) {
+                                if (slots.contains(hashMapSchedule.get(new Pair<>(team1, team2)))) {
                                     c++;
                                 }
                                 break;
                             case "A":
-                                if (slots.contains(timetable2.get(team2).get(team1).getTimeSlot().getId())) {
+                                if (slots.contains(hashMapSchedule.get(new Pair<>(team2, team1)))) {
                                     c++;
                                 }
                                 break;
                             case "HA":
-                                if (slots.contains(timetable2.get(team1).get(team2).getTimeSlot().getId())
-                                        || slots.contains(timetable2.get(team2).get(team1).getTimeSlot().getId())) {
+                                if (slots.contains(hashMapSchedule.get(new Pair<>(team1, team2)))
+                                        || slots.contains(hashMapSchedule.get(new Pair<>(team2, team1)))) {
                                     c++;
                                 }
                                 break;
@@ -282,27 +280,27 @@ public class Timetable {
                     }
                 }
             } else if (mode2.equals("EVERY")) {
-                for (Integer slot : slots) {
+                for (int slot : slots) {
                     int c = 0;
-                    for (Integer team1 : teams1) {
-                        for (Integer team2 : teams2) {
-                            if (team1.equals(team2))
+                    for (int team1 : teams1) {
+                        for (int team2 : teams2) {
+                            if (team1 == team2)
                                 continue;
                             switch (mode1) {
                                 case "H":
-                                    if (slot.equals(timetable2.get(team1).get(team2).getTimeSlot().getId())) {
+                                    if (slot == hashMapSchedule.get(new Pair<>(team1, team2))) {
                                         c++;
                                     }
                                     break;
                                 case "A":
-                                    if (slot.equals(timetable2.get(team2).get(team1).getTimeSlot().getId())) {
+                                    if (slot == hashMapSchedule.get(new Pair<>(team2, team1))) {
                                         c++;
                                     }
                                     break;
 
                                 case "HA":
-                                    if (slot.equals(timetable2.get(team1).get(team2).getTimeSlot().getId())
-                                    || slot.equals(timetable2.get(team2).get(team1).getTimeSlot().getId())) {
+                                    if (slot == hashMapSchedule.get(new Pair<>(team1, team2))
+                                    || slot == hashMapSchedule.get(new Pair<>(team2, team1))) {
                                         c++;
                                     }
                             }
@@ -327,9 +325,9 @@ public class Timetable {
         int penalty = 0;
         for (GA1 ga1 : ga1List) {
             int c = 0;
-            List<Integer> meetings = ga1.getMeetings();
+            ArrayList<Integer> meetings = (ArrayList<Integer>) ga1.getMeetings();
             for (int i = 0; i < meetings.size(); i+=2) {
-                if (ga1.getSlots().contains(timetable2.get(meetings.get(i)).get(meetings.get(i + 1)).getTimeSlot().getId())) {
+                if (ga1.getSlots().contains(hashMapSchedule.get(new Pair<>(meetings.get(i), meetings.get(i + 1))))) {
                     c++;
                 }
             }
@@ -357,20 +355,24 @@ public class Timetable {
             for (Integer slot : br1.getSlots()) {
                 if (slot == 0)
                     continue;
-                String slotStatus = timetable3[team][slot].getStatus();
-                String prevSlotStatus = timetable3[team][slot - 1].getStatus();
-                if (br1.getMode2().equals("H")) {
-                    if (slotStatus.equals("H") && prevSlotStatus.equals("H")) {
-                        breaks++;
-                    }
-                } else if (br1.getMode2().equals("A")) {
-                    if (slotStatus.equals("A") && prevSlotStatus.equals("A")) {
-                        breaks++;
-                    }
-                } else if (br1.getMode2().equals("HA")) {
-                    if (slotStatus.equals(prevSlotStatus)) {
-                        breaks++;
-                    }
+                String slotStatus = hashMapStatus.get(new Pair<>(team, slot)) ? "H" : "A" ;
+                String prevSlotStatus = hashMapStatus.get(new Pair<>(team, slot - 1)) ? "H" : "A" ;
+                switch (br1.getMode2()) {
+                    case "H":
+                        if (slotStatus.equals("H") && prevSlotStatus.equals("H")) {
+                            breaks++;
+                        }
+                        break;
+                    case "A":
+                        if (slotStatus.equals("A") && prevSlotStatus.equals("A")) {
+                            breaks++;
+                        }
+                        break;
+                    case "HA":
+                        if (slotStatus.equals(prevSlotStatus)) {
+                            breaks++;
+                        }
+                        break;
                 }
             }
             if (breaks > br1.getIntp()) {
@@ -396,8 +398,8 @@ public class Timetable {
                     Integer slot = slots.get(i);
                     if (slot == slots.size() - 1)
                         continue;
-                    String slotStatus = timetable3[team][slot].getStatus();
-                    String nextSlotStatus = timetable3[team][slot + 1].getStatus();
+                    String slotStatus = hashMapStatus.get(new Pair<>(team, slot)) ? "H" : "A" ;
+                    String nextSlotStatus = hashMapStatus.get(new Pair<>(team, slot + 1)) ? "H" : "A" ;
                     if (slotStatus.equals(nextSlotStatus)) {
                         breaks++;
                     }
@@ -423,7 +425,7 @@ public class Timetable {
             for (Integer team : fa2.getTeams()) {
                 Integer h = 0;
                 for (Integer slot : fa2.getSlots()) {
-                    String slotStatus = timetable3[team][slot].getStatus();
+                    String slotStatus = hashMapStatus.get(new Pair<>(team, slot)) ? "H" : "A" ;
                     if (slotStatus.equals("H")) {
                         h++;
                     }
@@ -460,17 +462,17 @@ public class Timetable {
             Collections.sort(teams);
             for (int i = 0; i < teams.size() - 1; i++) {
                 for (int j = i+1; j < teams.size(); j++) {
-                    Match match = timetable2.get(i).get(j);
-                    Match match2 = timetable2.get(j).get(i);
+                    int matchSlot1 = hashMapSchedule.get(new Pair<>(i,j));
+                    int matchSlot2 = hashMapSchedule.get(new Pair<>(j,i));
                     int maxTimeSlot;
                     int minTimeSlot;
                     int deviation;
-                    if (match.getTimeSlot().getId() > match2.getTimeSlot().getId()) {
-                        maxTimeSlot = match.getTimeSlot().getId();
-                        minTimeSlot = match2.getTimeSlot().getId();
+                    if (matchSlot1 > matchSlot2) {
+                        maxTimeSlot = matchSlot1;
+                        minTimeSlot = matchSlot2;
                     } else {
-                        minTimeSlot = match.getTimeSlot().getId();
-                        maxTimeSlot = match2.getTimeSlot().getId();
+                        minTimeSlot = matchSlot1;
+                        maxTimeSlot = matchSlot2;
                     }
 
                     deviation = maxTimeSlot - minTimeSlot;
