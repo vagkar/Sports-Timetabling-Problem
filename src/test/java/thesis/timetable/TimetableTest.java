@@ -38,22 +38,22 @@ class TimetableTest {
     @Test
     void CA2PenaltyTest() {
         ObjectiveValue objectiveValue = timetable.CA2Penalty(instance.getConstraints().getCA2());
-        Assertions.assertEquals(6, objectiveValue.getInfeasibility());
-        Assertions.assertEquals(16, objectiveValue.getObjective());
+        Assertions.assertEquals(0, objectiveValue.getInfeasibility());
+        Assertions.assertEquals(0, objectiveValue.getObjective());
     }
 
     @Test
     void CA3PenaltyTest() {
         ObjectiveValue objectiveValue = timetable.CA3Penalty(instance.getConstraints().getCA3(), instance.getResources().getSlots().size());
-        Assertions.assertEquals(36, objectiveValue.getInfeasibility());
-        Assertions.assertEquals(985, objectiveValue.getObjective());
+        Assertions.assertEquals(8, objectiveValue.getInfeasibility());
+        Assertions.assertEquals(330, objectiveValue.getObjective());
     }
 
     @Test
     void CA4PenaltyTest() {
         ObjectiveValue objectiveValue = timetable.CA4Penalty(instance.getConstraints().getCA4());
-        Assertions.assertEquals(6, objectiveValue.getInfeasibility());
-        Assertions.assertEquals(16, objectiveValue.getObjective());
+        Assertions.assertEquals(0, objectiveValue.getInfeasibility());
+        Assertions.assertEquals(0, objectiveValue.getObjective());
     }
 
     @Test
@@ -66,8 +66,8 @@ class TimetableTest {
     @Test
     void BR1PenaltyTest() {
         ObjectiveValue objectiveValue = timetable.BR1Penalty(instance.getConstraints().getBR1());
-        Assertions.assertEquals(6, objectiveValue.getInfeasibility());
-        Assertions.assertEquals(16, objectiveValue.getObjective());
+        Assertions.assertEquals(0, objectiveValue.getInfeasibility());
+        Assertions.assertEquals(0, objectiveValue.getObjective());
     }
 
     @Test

@@ -2,6 +2,7 @@ package thesis.instance.constraints.br;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement(name = "BreakConstraints")
@@ -11,6 +12,8 @@ public class BreakConstraints {
     private List<BR2> br2Constraints;
 
     public List<BR1> getBr1Constraints() {
+        if (br1Constraints == null)
+            br1Constraints = new ArrayList<>();
         return br1Constraints;
     }
 
@@ -20,6 +23,8 @@ public class BreakConstraints {
     }
 
     public List<BR2> getBr2Constraints() {
+        if (br2Constraints == null)
+            br2Constraints = new ArrayList<>();
         return br2Constraints;
     }
 

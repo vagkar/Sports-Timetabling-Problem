@@ -465,10 +465,10 @@ public class Timetable {
         for (SE1 se1 : se1List) {
             ArrayList<Integer> teams = (ArrayList<Integer>) se1.getTeams();
             Collections.sort(teams);
-            for (int i = 0; i < teams.size() - 1; i++) {
-                for (int j = i+1; j < teams.size(); j++) {
-                    int matchSlot1 = hashMapSchedule.get(new Pair<>(i,j));
-                    int matchSlot2 = hashMapSchedule.get(new Pair<>(j,i));
+            for (int t1 = 0; t1 < teams.size() - 1; t1++) {
+                for (int t2 = t1+1; t2 < teams.size(); t2++) {
+                    int matchSlot1 = hashMapSchedule.get(new Pair<>(t1,t2));
+                    int matchSlot2 = hashMapSchedule.get(new Pair<>(t2,t1));
                     int maxTimeSlot;
                     int minTimeSlot;
                     int deviation;

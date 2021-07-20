@@ -2,6 +2,7 @@ package thesis.instance.constraints.capacity;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement(name = "CapacityConstraints")
@@ -13,6 +14,8 @@ public class CapacityConstraints {
     private List<CA4> ca4Constraints;
 
     public List<CA1> getCa1Constraints() {
+        if (ca1Constraints == null)
+            ca1Constraints = new ArrayList<>();
         return ca1Constraints;
     }
 
@@ -22,6 +25,8 @@ public class CapacityConstraints {
     }
 
     public List<CA2> getCa2Constraints() {
+        if (ca2Constraints == null)
+            ca2Constraints = new ArrayList<>();
         return ca2Constraints;
     }
 
@@ -31,6 +36,8 @@ public class CapacityConstraints {
     }
 
     public List<CA3> getCa3Constraints() {
+        if (ca3Constraints == null)
+            ca3Constraints = new ArrayList<>();
         return ca3Constraints;
     }
 
@@ -40,6 +47,8 @@ public class CapacityConstraints {
     }
 
     public List<CA4> getCa4Constraints() {
+        if (ca4Constraints == null)
+            ca4Constraints = new ArrayList<>();
         return ca4Constraints;
     }
 
