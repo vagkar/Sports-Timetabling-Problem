@@ -35,10 +35,7 @@ public class CircleMethod implements ScheduleMethod {
         }
 
         Team constantTeam = homeTeams.pop();
-
         int timeSlots = slots.size();
-        Match[][] matches = new Match[halfTeams][timeSlots];
-
 
         //Single RR
         for (int i = 0; i < timeSlots/2; i++) {
