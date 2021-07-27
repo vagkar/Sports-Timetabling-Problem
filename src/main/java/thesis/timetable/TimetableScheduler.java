@@ -20,6 +20,7 @@ public class TimetableScheduler {
         ScheduleMethod scheduleMethod = selectScheduleMethod();
         this.timetable = scheduleMethod.schedule();
         this.timetable.printTimetable();
+        this.timetable.printHashMapSchedule();
         return this.timetable;
     }
 

@@ -17,8 +17,7 @@ public class BergerMethod implements ScheduleMethod{
     private Timetable timetable;
 
     public BergerMethod(Instance instance) {
-        this.timetable = new Timetable(instance.getResources().getTeams().size(),
-                instance.getResources().getSlots().size());
+        this.timetable = new Timetable(instance);
         this.instance = instance;
     }
 

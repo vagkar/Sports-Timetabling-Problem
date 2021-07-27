@@ -18,6 +18,7 @@ import thesis.solution.metadata.ObjectiveValue;
 import java.util.*;
 
 public class Timetable {
+    private final Instance instance;
 
     /*
     * hashMapSchedule = 1(team), 5(team) : 0(slot)
@@ -60,7 +61,10 @@ public class Timetable {
 
     private Match[][] timetable3;
 
-    public Timetable(int numberOfTeams , int timeSlots) {
+    public Timetable(Instance instance) {
+        this.instance = instance;
+        int numberOfTeams = instance.getResources().getTeams().size();
+        int timeSlots = instance.getResources().getSlots().size();
         this.timetable = new Match[(numberOfTeams / 2)][timeSlots];
         for (int i = 0; i < numberOfTeams; i++) {
             this.timetable2.add(new HashMap<>());
@@ -92,6 +96,40 @@ public class Timetable {
                 if (timetable[i][j] == null)
                     continue;
                 System.out.print("(" + timetable[i][j].getHome().getId() + "-" + timetable[i][j].getAway().getId() + ")\t");
+            }
+            System.out.println();
+        }
+    }
+
+    public void printHashMapSchedule() {
+        for (int i = 0; i < instance.getResources().getSlots().size(); i++) {
+            System.out.print("Slot " + i + "\t");
+        }
+        System.out.println();
+        Map<Pair<Integer, Integer>, Boolean> printedMatches = new HashMap<>();
+
+        int numberOfTeams = instance.getResources().getTeams().size();
+        for (int i = 0; i < numberOfTeams/2; i++) {
+            for (int j = 0; j < instance.getResources().getSlots().size(); j++) {
+                int team1 = i;
+                int team2 = hashMapSlot.get(new Pair<>(team1, j));
+                int failed = 0;
+                while (printedMatches.get(new Pair<>(team1, team2)) != null
+                        && printedMatches.get(new Pair<>(team2, team1)) != null) {
+
+                    team1 = i + failed;
+                    team2 = hashMapSlot.get(new Pair<>(team1,j));
+                    if (team1 == numberOfTeams-1)
+                        break;
+                    failed++;
+                }
+                if (hashMapStatus.get(new Pair<>(team1, j))) {
+                    System.out.print("(" + team1 + "-" + team2 + ")\t");
+                    printedMatches.put(new Pair<>(team1, team2), true);
+                } else {
+                    System.out.print("(" + team2 + "-" + team1 + ")\t");
+                    printedMatches.put(new Pair<>(team2, team1), true);
+                }
             }
             System.out.println();
         }
@@ -129,6 +167,7 @@ public class Timetable {
     }
 
     public List<ScheduledMatch> getScheduleMatches() {
+        //TODO HashMap Convert
         List<ScheduledMatch> scheduledMatches = new ArrayList<>();
         int periods = timetable.length;
         int timeSlots = timetable[0].length;
