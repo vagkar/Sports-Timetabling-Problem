@@ -19,7 +19,6 @@ public class TimetableScheduler {
     public Timetable schedule() {
         ScheduleMethod scheduleMethod = selectScheduleMethod();
         this.timetable = scheduleMethod.schedule();
-        this.timetable.printTimetable();
         this.timetable.printHashMapSchedule();
         return this.timetable;
     }
@@ -49,7 +48,7 @@ public class TimetableScheduler {
     public Timetable schedule(int option) {
         ScheduleMethod scheduleMethod = selectScheduleMethod(option);
         this.timetable = scheduleMethod.schedule();
-        this.timetable.printTimetable();
+        this.timetable.printHashMapSchedule();
         return this.timetable;
     }
 

@@ -34,6 +34,8 @@ public class Timetable {
 
     private HashMap<Pair<Integer, Integer>, Boolean> hashMapStatus = new HashMap<>();
 
+    private List<ScheduledMatch> scheduledMatches;
+
     public void putSchedule(Match match) {
         this.hashMapSchedule.put(new Pair<>(match.getHome().getId(), match.getAway().getId()),
                 match.getTimeSlot().getId());
@@ -102,6 +104,7 @@ public class Timetable {
     }
 
     public void printHashMapSchedule() {
+        List<ScheduledMatch> scheduledMatches = new ArrayList<>();
         for (int i = 0; i < instance.getResources().getSlots().size(); i++) {
             System.out.print("Slot " + i + "\t");
         }
@@ -126,13 +129,16 @@ public class Timetable {
                 if (hashMapStatus.get(new Pair<>(team1, j))) {
                     System.out.print("(" + team1 + "-" + team2 + ")\t");
                     printedMatches.put(new Pair<>(team1, team2), true);
+                    scheduledMatches.add(new ScheduledMatch(team1, team2, j));
                 } else {
                     System.out.print("(" + team2 + "-" + team1 + ")\t");
                     printedMatches.put(new Pair<>(team2, team1), true);
+                    scheduledMatches.add(new ScheduledMatch(team2, team1, j));
                 }
             }
             System.out.println();
         }
+        this.scheduledMatches = scheduledMatches;
     }
 
     public Slot getMatchTimeSlot(int home, int away) {
@@ -167,20 +173,7 @@ public class Timetable {
     }
 
     public List<ScheduledMatch> getScheduleMatches() {
-        //TODO HashMap Convert
-        List<ScheduledMatch> scheduledMatches = new ArrayList<>();
-        int periods = timetable.length;
-        int timeSlots = timetable[0].length;
-        for (int i = 0; i < timeSlots; i++) {
-            for (int j = 0; j < periods; j++) {
-                if (timetable[j][i] == null)
-                    continue;
-                scheduledMatches.add(new ScheduledMatch(timetable[j][i].getHome().getId(),
-                        timetable[j][i].getAway().getId(),
-                        timetable[j][i].getTimeSlot().getId()));
-            }
-        }
-        return scheduledMatches;
+        return this.scheduledMatches;
     }
 
     public ObjectiveValue CA1Penalty(List<CA1> ca1List) {
