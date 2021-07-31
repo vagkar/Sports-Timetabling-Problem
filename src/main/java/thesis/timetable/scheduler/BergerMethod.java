@@ -24,46 +24,95 @@ public class BergerMethod implements ScheduleMethod{
     @Override
     public Timetable schedule() {
         HashMap<Pair<Integer, Integer>, Integer> RRSchedule = new HashMap<>();
+
         ArrayList<Team> teams = (ArrayList<Team>) instance.getResources().getTeams();
         ArrayList<Slot> slots = (ArrayList<Slot>) instance.getResources().getSlots();
+
+
+        LinkedList<Team> oddHomeTeams = new LinkedList<>();
+        LinkedList<Team> oddAwayTeams = new LinkedList<>();
+        LinkedList<Team> evenHomeTeams = new LinkedList<>();
+        LinkedList<Team> evenAwayTeams = new LinkedList<>();
+
+        for (int i = 0; i < teams.size()/2; i++) {
+            evenHomeTeams.add(teams.get(i));
+            evenAwayTeams.add(teams.get(i + teams.size()/2));
+        }
+
+        for (int i = 0; i < teams.size()/2; i++) {
+            oddAwayTeams.add(teams.get(i + 1));
+            if (i == 0)
+                oddHomeTeams.add(teams.get(0));
+            else
+                oddHomeTeams.add(teams.get(i + teams.size()/2));
+        }
+
         Team constantTeam = teams.get(teams.size()-1);
-        teams.remove(teams.size()-1);
+        evenAwayTeams.removeLast();
+        oddHomeTeams.removeLast();
+        int teamsSize = teams.size();
+        int timeSlots = slots.size();
 
-        for (int i = 0; i < teams.size(); i++) {
-            LinkedList<Team> slotsOrder = new LinkedList<>(teams);
-
-            int slot = i;
-            int period = 0;
-            for (int j = 0; j < teams.size(); j++) {
-                if (slot < teams.size()) {
-                    RRSchedule.put(new Pair<>(i, j), slot);
-                } else if (slot == teams.size()) {
-                    slot = 0;
-                    RRSchedule.put(new Pair<>(i, j), slot);
-                }
-
-                if (period > 2)
-                    period = 0;
-
-                if (slot % 2 == 1) {
-                    if (i == j) {
-                        Match match = new Match(constantTeam, teams.get(j), slots.get(slot));
+        //Single RR
+        for (int i = 0; i < timeSlots/2; i++) {
+            for (int j = 0; j < teamsSize/2; j++) {
+                if (i % 2 == 0) {
+                    if (j == 0){
+                        Match match = new Match(evenHomeTeams.get(j), constantTeam, slots.get(i));
                         timetable.putSchedule(match);
                         continue;
                     }
-                    Match match = new Match(teams.get(i), teams.get(j), slots.get(slot));
+                    Match match = new Match(evenHomeTeams.get(j), evenAwayTeams.get(evenAwayTeams.size() - j), slots.get(i));
                     timetable.putSchedule(match);
                 } else {
-                    if (i == j) {
-                        Match match = new Match(teams.get(j), constantTeam, slots.get(slot));
+                    if (j == 0) {
+                        Match match = new Match(constantTeam, oddAwayTeams.get(oddAwayTeams.size() - 1) , slots.get(i));
                         timetable.putSchedule(match);
                         continue;
                     }
-                    Match match = new Match(teams.get(j), teams.get(i), slots.get(slot));
+                    Match match = new Match(oddHomeTeams.get(oddHomeTeams.size() - j), oddAwayTeams.get((oddAwayTeams.size()-1) - j), slots.get(i));
                     timetable.putSchedule(match);
                 }
-                period++;
-                slot++;
+            }
+            if (i % 2 == 0) {
+                evenHomeTeams.add(evenAwayTeams.pop());
+                evenAwayTeams.add(evenHomeTeams.pop());
+            } else {
+                oddHomeTeams.addFirst(oddAwayTeams.pop());
+                oddAwayTeams.add(oddHomeTeams.getLast());
+                oddHomeTeams.removeLast();
+            }
+        }
+
+
+        //Double RR
+        for (int i = timeSlots/2; i < timeSlots; i++) {
+            for (int j = 0; j < teamsSize/2; j++) {
+                if (i % 2 == 0) {
+                    if (j == 0){
+                        Match match = new Match(evenHomeTeams.get(j), constantTeam, slots.get(i));
+                        timetable.putSchedule(match);
+                        continue;
+                    }
+                    Match match = new Match(evenAwayTeams.get(evenAwayTeams.size() - j), evenHomeTeams.get(j), slots.get(i));
+                    timetable.putSchedule(match);
+                } else {
+                    if (j == 0) {
+                        Match match = new Match(constantTeam, oddAwayTeams.get(oddAwayTeams.size() - 1) , slots.get(i));
+                        timetable.putSchedule(match);
+                        continue;
+                    }
+                    Match match = new Match(oddAwayTeams.get((oddAwayTeams.size()-1) - j), oddHomeTeams.get(oddHomeTeams.size() - j), slots.get(i));
+                    timetable.putSchedule(match);
+                }
+            }
+            if (i % 2 == 0) {
+                evenHomeTeams.add(evenAwayTeams.pop());
+                evenAwayTeams.add(evenHomeTeams.pop());
+            } else {
+                oddHomeTeams.addFirst(oddAwayTeams.pop());
+                oddAwayTeams.add(oddHomeTeams.getLast());
+                oddHomeTeams.removeLast();
             }
         }
         return this.timetable;
