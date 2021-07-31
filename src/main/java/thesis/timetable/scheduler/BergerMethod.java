@@ -48,31 +48,19 @@ public class BergerMethod implements ScheduleMethod{
                 if (slot % 2 == 1) {
                     if (i == j) {
                         Match match = new Match(constantTeam, teams.get(j), slots.get(slot));
-                        timetable.add(period, slot, match);
-                        timetable.put(match);
                         timetable.putSchedule(match);
-                        timetable.addToTimetable3(match.getHome().getId(), slot, match);
                         continue;
                     }
                     Match match = new Match(teams.get(i), teams.get(j), slots.get(slot));
-                    timetable.add(period, slot, match);
-                    timetable.put(match);
                     timetable.putSchedule(match);
-                    timetable.addToTimetable3(match.getHome().getId(), slot, match);
                 } else {
                     if (i == j) {
                         Match match = new Match(teams.get(j), constantTeam, slots.get(slot));
-                        timetable.add(period, slot, match);
-                        timetable.put(match);
                         timetable.putSchedule(match);
-                        timetable.addToTimetable3(match.getHome().getId(), slot, match);
                         continue;
                     }
                     Match match = new Match(teams.get(j), teams.get(i), slots.get(slot));
-                    timetable.add(period, slot, match);
-                    timetable.put(match);
                     timetable.putSchedule(match);
-                    timetable.addToTimetable3(match.getHome().getId(), slot, match);
                 }
                 period++;
                 slot++;

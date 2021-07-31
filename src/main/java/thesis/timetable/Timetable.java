@@ -36,6 +36,10 @@ public class Timetable {
 
     private List<ScheduledMatch> scheduledMatches;
 
+    public HashMap<Pair<Integer, Integer>, Integer> getHashMapSchedule() {
+        return this.hashMapSchedule;
+    }
+
     public void putSchedule(Match match) {
         this.hashMapSchedule.put(new Pair<>(match.getHome().getId(), match.getAway().getId()),
                 match.getTimeSlot().getId());
@@ -57,50 +61,18 @@ public class Timetable {
                 false);
     }
 
-    private List<HashMap<Integer, Match>> timetable2 = new ArrayList<>();
+    public void patch(int home, int away, int slot) {
+        this.hashMapSchedule.replace(new Pair<>(home, away), slot);
 
-    private Match[][] timetable;
+        this.hashMapSlot.replace(new Pair<>(home, slot), away);
+        this.hashMapSlot.replace(new Pair<>(away, slot), home);
 
-    private Match[][] timetable3;
+        this.hashMapStatus.replace(new Pair<>(home, slot), true);
+        this.hashMapStatus.replace(new Pair<>(away, slot), false);
+    }
 
     public Timetable(Instance instance) {
         this.instance = instance;
-        int numberOfTeams = instance.getResources().getTeams().size();
-        int timeSlots = instance.getResources().getSlots().size();
-        this.timetable = new Match[(numberOfTeams / 2)][timeSlots];
-        for (int i = 0; i < numberOfTeams; i++) {
-            this.timetable2.add(new HashMap<>());
-        }
-        this.setTimetable3(new Match[numberOfTeams][timeSlots]);
-    }
-
-    public Match[][] getTimetable() {
-        return this.timetable.clone();
-    }
-
-    public void setTimetable(Match[][] timetable) {
-        this.timetable = timetable.clone();
-    }
-
-    public void add(int period, int timeSlot, Match match) {
-        this.timetable[period][timeSlot] = match;
-    }
-
-    public void printTimetable() {
-        for (int i = 0; i < timetable[0].length; i++) {
-            if (timetable[0][i] == null)
-                continue;
-            System.out.print(timetable[0][i].getTimeSlot().getName() + "\t");
-        }
-        System.out.println();
-        for (int i = 0; i < timetable.length; i++) {
-            for (int j = 0; j < timetable[i].length; j++) {
-                if (timetable[i][j] == null)
-                    continue;
-                System.out.print("(" + timetable[i][j].getHome().getId() + "-" + timetable[i][j].getAway().getId() + ")\t");
-            }
-            System.out.println();
-        }
     }
 
     public void printHashMapSchedule() {
@@ -112,7 +84,7 @@ public class Timetable {
         Map<Pair<Integer, Integer>, Boolean> printedMatches = new HashMap<>();
 
         int numberOfTeams = instance.getResources().getTeams().size();
-        for (int i = 0; i < numberOfTeams/2; i++) {
+        for (int i = 0; i < numberOfTeams / 2; i++) {
             for (int j = 0; j < instance.getResources().getSlots().size(); j++) {
                 int team1 = i;
                 int team2 = hashMapSlot.get(new Pair<>(team1, j));
@@ -121,8 +93,8 @@ public class Timetable {
                         && printedMatches.get(new Pair<>(team2, team1)) != null) {
 
                     team1 = i + failed;
-                    team2 = hashMapSlot.get(new Pair<>(team1,j));
-                    if (team1 == numberOfTeams-1)
+                    team2 = hashMapSlot.get(new Pair<>(team1, j));
+                    if (team1 == numberOfTeams - 1)
                         break;
                     failed++;
                 }
@@ -141,37 +113,7 @@ public class Timetable {
         this.scheduledMatches = scheduledMatches;
     }
 
-    public Slot getMatchTimeSlot(int home, int away) {
-        return timetable2.get(home).get(away).getTimeSlot();
-    }
-
-    public void put(Match match) {
-        this.timetable2.get(match.getHome().getId()).put(match.getAway().getId(), match);
-    }
-
-    public List<HashMap<Integer, Match>> getTimetable2() {
-        return this.timetable2;
-    }
-
-    public void setTimetable2(List<HashMap<Integer, Match>> timetable1) {
-        this.timetable2 = timetable1;
-    }
-
-    public Match[][] getTimetable3() {
-        return this.timetable3;
-    }
-
-    public void setTimetable3(Match[][] timetable3) {
-        this.timetable3 = timetable3.clone();
-    }
-
-    public void  addToTimetable3(int homeTeam, int timeSlot, Match match) {
-        this.timetable3[homeTeam][timeSlot] = new Match(match.getHome(), match.getAway(), match.getTimeSlot());
-        this.timetable3[homeTeam][timeSlot].setStatus("H");
-        this.timetable3[match.getAway().getId()][timeSlot] = new Match(match.getHome(), match.getAway(), match.getTimeSlot());
-        this.timetable3[match.getAway().getId()][timeSlot].setStatus("A");
-    }
-
+    // filling the list while printing Timetable to printHashMapSchedule
     public List<ScheduledMatch> getScheduleMatches() {
         return this.scheduledMatches;
     }
