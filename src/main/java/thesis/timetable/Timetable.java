@@ -11,7 +11,6 @@ import thesis.instance.constraints.capacity.CA4;
 import thesis.instance.constraints.fairness.FA2;
 import thesis.instance.constraints.game.GA1;
 import thesis.instance.constraints.separation.SE1;
-import thesis.instance.resources.Slot;
 import thesis.solution.games.ScheduledMatch;
 import thesis.solution.metadata.ObjectiveValue;
 
@@ -116,6 +115,38 @@ public class Timetable {
     // filling the list while printing Timetable to printHashMapSchedule
     public List<ScheduledMatch> getScheduleMatches() {
         return this.scheduledMatches;
+    }
+
+    public void swapSlots(int slot1, int slot2) {
+        Map<Pair<Integer, Integer>, Boolean> swappedMatches = new HashMap<>();
+        for (int team1 = 0; team1 < instance.getResources().getTeams().size(); team1++) {
+            int team2Slot1 = hashMapSlot.get(new Pair<>(team1, slot1));
+            boolean slot1Status = hashMapStatus.get(new Pair<>(team1, slot1));
+            int team2Slot2 = hashMapSlot.get(new Pair<>(team1, slot2));
+            boolean slot2Status = hashMapStatus.get(new Pair<>(team1, slot2));
+            if (slot1Status) {
+                if (swappedMatches.get(new Pair<>(team1,team2Slot1)) == null) {
+                    patch(team1, team2Slot1, slot2);
+                    swappedMatches.put(new Pair<>(team1, team2Slot1), true);
+                }
+            } else {
+                if (swappedMatches.get(new Pair<>(team2Slot1,team1)) == null) {
+                    patch(team2Slot1, team1, slot2);
+                    swappedMatches.put(new Pair<>(team2Slot1, team1), true);
+                }
+            }
+            if (slot2Status) {
+                if (swappedMatches.get(new Pair<>(team1,team2Slot2)) == null) {
+                    patch(team1, team2Slot2, slot1);
+                    swappedMatches.put(new Pair<>(team1, team2Slot2), true);
+                }
+            } else {
+                if (swappedMatches.get(new Pair<>(team2Slot2, team1)) == null) {
+                    patch(team2Slot2, team1, slot1);
+                    swappedMatches.put(new Pair<>(team2Slot2, team1), true);
+                }
+            }
+        }
     }
 
     public ObjectiveValue CA1Penalty(List<CA1> ca1List) {

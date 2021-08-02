@@ -32,8 +32,8 @@ class TimetableTest {
     @Test
     void CA1PenaltyTest() {
         ObjectiveValue objectiveValue = timetable.CA1Penalty(instance.getConstraints().getCA1());
-        Assertions.assertEquals(6, objectiveValue.getInfeasibility());
-        Assertions.assertEquals(15, objectiveValue.getObjective());
+        Assertions.assertEquals(5, objectiveValue.getInfeasibility());
+        Assertions.assertEquals(12, objectiveValue.getObjective());
     }
 
     @Test
@@ -46,8 +46,8 @@ class TimetableTest {
     @Test
     void CA3PenaltyTest() {
         ObjectiveValue objectiveValue = timetable.CA3Penalty(instance.getConstraints().getCA3(), instance.getResources().getSlots().size());
-        Assertions.assertEquals(10, objectiveValue.getInfeasibility());
-        Assertions.assertEquals(335, objectiveValue.getObjective());
+        Assertions.assertEquals(8, objectiveValue.getInfeasibility());
+        Assertions.assertEquals(310, objectiveValue.getObjective());
     }
 
     @Test
@@ -74,7 +74,7 @@ class TimetableTest {
     @Test
     void BR2PenaltyTest() {
         ObjectiveValue objectiveValue = timetable.BR2Penalty(instance.getConstraints().getBR2());
-        Assertions.assertEquals(20, objectiveValue.getInfeasibility());
+        Assertions.assertEquals(16, objectiveValue.getInfeasibility());
         Assertions.assertEquals(0, objectiveValue.getObjective());
     }
 
@@ -101,10 +101,10 @@ class TimetableTest {
 
     @Test
     void patchTest() {
-        timetable.patch(0, 5, 5);
-        timetable.patch(5, 0 , 0);
+        timetable.swapSlots(0, 5);
+        timetable.printHashMapSchedule();
         Assertions.assertEquals(5, timetable.getHashMapSchedule().get(new Pair<>(0, 5)));
         Assertions.assertEquals(0, timetable.getHashMapSchedule().get(new Pair<>(5, 0)));
-        timetable.printHashMapSchedule();
+
     }
 }
