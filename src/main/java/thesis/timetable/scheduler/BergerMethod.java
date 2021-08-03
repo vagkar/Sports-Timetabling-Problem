@@ -23,7 +23,6 @@ public class BergerMethod implements ScheduleMethod{
 
     @Override
     public Timetable schedule() {
-        HashMap<Pair<Integer, Integer>, Integer> RRSchedule = new HashMap<>();
 
         ArrayList<Team> teams = (ArrayList<Team>) instance.getResources().getTeams();
         ArrayList<Slot> slots = (ArrayList<Slot>) instance.getResources().getSlots();

@@ -86,18 +86,18 @@ public class Timetable {
         for (int i = 0; i < numberOfTeams / 2; i++) {
             for (int j = 0; j < instance.getResources().getSlots().size(); j++) {
                 int team1 = i;
-                int team2 = hashMapSlot.get(new Pair<>(team1, j));
+                int team2 = getHashMapSlot().get(new Pair<>(team1, j));
                 int failed = 0;
                 while (printedMatches.get(new Pair<>(team1, team2)) != null
                         && printedMatches.get(new Pair<>(team2, team1)) != null) {
 
                     team1 = i + failed;
-                    team2 = hashMapSlot.get(new Pair<>(team1, j));
+                    team2 = getHashMapSlot().get(new Pair<>(team1, j));
                     if (team1 == numberOfTeams - 1)
                         break;
                     failed++;
                 }
-                if (hashMapStatus.get(new Pair<>(team1, j))) {
+                if (getHashMapStatus().get(new Pair<>(team1, j))) {
                     System.out.print("(" + team1 + "-" + team2 + ")\t");
                     printedMatches.put(new Pair<>(team1, team2), true);
                     scheduledMatches.add(new ScheduledMatch(team1, team2, j));
@@ -118,6 +118,9 @@ public class Timetable {
     }
 
     public void swapSlots(int slot1, int slot2) {
+        HashMap<Pair<Integer, Integer>, Integer> hashMapSlot = getHashMapSlot();
+        HashMap<Pair<Integer, Integer>, Boolean> hashMapStatus = getHashMapStatus();
+
         Map<Pair<Integer, Integer>, Boolean> swappedMatches = new HashMap<>();
         for (int team1 = 0; team1 < instance.getResources().getTeams().size(); team1++) {
             int team2Slot1 = hashMapSlot.get(new Pair<>(team1, slot1));
@@ -562,5 +565,13 @@ public class Timetable {
             penalty += objectiveValue.getObjective();
         }
         return new ObjectiveValue(infeasibility, penalty);
+    }
+
+    public HashMap<Pair<Integer, Integer>, Integer> getHashMapSlot() {
+        return (HashMap<Pair<Integer, Integer>, Integer>) hashMapSlot.clone();
+    }
+
+    public HashMap<Pair<Integer, Integer>, Boolean> getHashMapStatus() {
+        return (HashMap<Pair<Integer, Integer>, Boolean>) hashMapStatus.clone();
     }
 }
