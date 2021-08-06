@@ -33,8 +33,6 @@ public class Timetable {
 
     private HashMap<Pair<Integer, Integer>, Boolean> hashMapStatus = new HashMap<>();
 
-    private List<ScheduledMatch> scheduledMatches;
-
     public HashMap<Pair<Integer, Integer>, Integer> getHashMapSchedule() {
         return this.hashMapSchedule;
     }
@@ -75,7 +73,6 @@ public class Timetable {
     }
 
     public void printHashMapSchedule() {
-        List<ScheduledMatch> scheduledMatches = new ArrayList<>();
         for (int i = 0; i < instance.getResources().getSlots().size(); i++) {
             System.out.print("Slot " + i + "\t");
         }
@@ -86,35 +83,26 @@ public class Timetable {
         for (int i = 0; i < numberOfTeams / 2; i++) {
             for (int j = 0; j < instance.getResources().getSlots().size(); j++) {
                 int team1 = i;
-                int team2 = getHashMapSlot().get(new Pair<>(team1, j));
+                int team2 = this.hashMapSlot.get(new Pair<>(team1, j));
                 int failed = 0;
                 while (printedMatches.get(new Pair<>(team1, team2)) != null
                         && printedMatches.get(new Pair<>(team2, team1)) != null) {
-
                     team1 = i + failed;
-                    team2 = getHashMapSlot().get(new Pair<>(team1, j));
+                    team2 = this.hashMapSlot.get(new Pair<>(team1, j));
                     if (team1 == numberOfTeams - 1)
                         break;
                     failed++;
                 }
-                if (getHashMapStatus().get(new Pair<>(team1, j))) {
+                if (this.hashMapStatus.get(new Pair<>(team1, j))) {
                     System.out.print("(" + team1 + "-" + team2 + ")\t");
                     printedMatches.put(new Pair<>(team1, team2), true);
-                    scheduledMatches.add(new ScheduledMatch(team1, team2, j));
                 } else {
                     System.out.print("(" + team2 + "-" + team1 + ")\t");
                     printedMatches.put(new Pair<>(team2, team1), true);
-                    scheduledMatches.add(new ScheduledMatch(team2, team1, j));
                 }
             }
             System.out.println();
         }
-        this.scheduledMatches = scheduledMatches;
-    }
-
-    // filling the list while printing Timetable to printHashMapSchedule
-    public List<ScheduledMatch> getScheduleMatches() {
-        return this.scheduledMatches;
     }
 
     public void swapSlots(int slot1, int slot2) {
