@@ -33,8 +33,15 @@ public class Timetable {
 
     private HashMap<Pair<Integer, Integer>, Boolean> hashMapStatus = new HashMap<>();
 
+    private List<ScheduledMatch> scheduledMatches;
+
     public HashMap<Pair<Integer, Integer>, Integer> getHashMapSchedule() {
         return this.hashMapSchedule;
+    }
+
+    // filling the list while printing Timetable to printHashMapSchedule
+    public List<ScheduledMatch> getScheduleMatches() {
+        return this.scheduledMatches;
     }
 
     public void putSchedule(Match match) {
@@ -73,6 +80,7 @@ public class Timetable {
     }
 
     public void printHashMapSchedule() {
+        List<ScheduledMatch> scheduledMatches = new ArrayList<>();
         for (int i = 0; i < instance.getResources().getSlots().size(); i++) {
             System.out.print("Slot " + i + "\t");
         }
@@ -96,13 +104,16 @@ public class Timetable {
                 if (this.hashMapStatus.get(new Pair<>(team1, j))) {
                     System.out.print("(" + team1 + "-" + team2 + ")\t");
                     printedMatches.put(new Pair<>(team1, team2), true);
+                    scheduledMatches.add(new ScheduledMatch(team1, team2, j));
                 } else {
                     System.out.print("(" + team2 + "-" + team1 + ")\t");
                     printedMatches.put(new Pair<>(team2, team1), true);
+                    scheduledMatches.add(new ScheduledMatch(team2, team1, j));
                 }
             }
             System.out.println();
         }
+        this.scheduledMatches = scheduledMatches;
     }
 
     public void swapSlots(int slot1, int slot2) {
