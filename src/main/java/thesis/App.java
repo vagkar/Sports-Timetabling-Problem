@@ -21,8 +21,8 @@ public class App {
         TimetableScheduler timetableScheduler = new TimetableScheduler(instance);
         Timetable timetable = timetableScheduler.schedule();
 
-        timetable.swapSlots(1, 5);
-        timetable.printHashMapSchedule();
+//        timetable.swapSlots(1, 5);
+//        timetable.printHashMapSchedule();
 
         Solution solution = new Solution();
         solution.setObjectiveValue(timetable.computePenalties(instance));

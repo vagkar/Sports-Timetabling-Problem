@@ -405,10 +405,8 @@ public class Timetable {
         for (BR2 br2 : br2List) {
             int breaks = 0;
             for (int team : br2.getTeams()) {
-                ArrayList<Integer> slots = (ArrayList<Integer>) br2.getSlots();
-                for (int i = 0; i < slots.size(); i++) {
-                    int slot = slots.get(i);
-                    if (slot == slots.size() - 1)
+                for (int slot : br2.getSlots()) {
+                    if (slot == instance.getResources().getSlots().size() - 1)
                         continue;
                     String slotStatus = hashMapStatus.get(new Pair<>(team, slot)) ? "H" : "A" ;
                     String nextSlotStatus = hashMapStatus.get(new Pair<>(team, slot + 1)) ? "H" : "A" ;
