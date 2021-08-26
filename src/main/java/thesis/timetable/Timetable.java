@@ -116,7 +116,19 @@ public class Timetable {
         this.scheduledMatches = scheduledMatches;
     }
 
+    public void swapRematch(int team1, int team2) {
+        int slot1 = hashMapSchedule.get(new Pair<>(team1, team2));
+        int slot2 = hashMapSchedule.get(new Pair<>(team2, team1));
+
+        patch(team1, team2, slot2);
+        patch(team2, team1, slot1);
+    }
+
     public void swapSlots(int slot1, int slot2) {
+
+        if (isPhasedViolatedCheckBySlots(slot1, slot2))
+            return;
+
         HashMap<Pair<Integer, Integer>, Integer> hashMapSlot = getHashMapSlot();
         HashMap<Pair<Integer, Integer>, Boolean> hashMapStatus = getHashMapStatus();
 
@@ -149,6 +161,17 @@ public class Timetable {
                 }
             }
         }
+    }
+
+    private boolean isPhasedViolatedCheckBySlots(int slot1, int slot2) {
+        boolean isPhased = instance.getStructure().getFormat().getGameMode().equals("P");
+        if (!isPhased)
+            return false;
+        int sizeSlots = instance.getResources().getSlots().size();
+        boolean isSlotsPhased = (slot1 < sizeSlots/2 && slot2 < sizeSlots/2) ||
+                (slot1 >= sizeSlots/2 && slot2 >= sizeSlots/2); /* ||
+                (Math.abs(slot1-slot2) == sizeSlots/2); if already swapped random slots, this is wrong */
+        return !isSlotsPhased;
     }
 
     public ObjectiveValue CA1Penalty(List<CA1> ca1List) {
