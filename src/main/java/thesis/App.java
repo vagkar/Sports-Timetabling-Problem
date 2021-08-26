@@ -18,20 +18,14 @@ public class App {
         parseXML.unmarshall();
         Instance instance = parseXML.getInstance();
 
-        ArrayList<Team> teams = (ArrayList<Team>) instance.getResources().getTeams();
         TimetableScheduler timetableScheduler = new TimetableScheduler(instance);
         Timetable timetable = timetableScheduler.schedule();
-
-//        timetable.swapSlots(2, 5);
-//        timetable.printHashMapSchedule();
-//        timetable.swapRematch(1, 5);
-//        timetable.printHashMapSchedule();
 
         Solution solution = new Solution();
         solution.setObjectiveValue(timetable.computePenalties(instance));
         solution.setGames(timetable.getScheduleMatches());
 
-        HillClimbing.bestSolution(timetable, solution, instance);
+        solution = HillClimbing.bestSolution(timetable, solution, instance);
 
         parseXML.marshall(solution);
 

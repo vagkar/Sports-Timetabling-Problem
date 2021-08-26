@@ -8,10 +8,10 @@ import java.util.Random;
 
 public class HillClimbing {
 
-    public static void bestSolution(Timetable timetable, Solution solution, Instance instance) {
+    public static Solution bestSolution(Timetable timetable, Solution solution, Instance instance) {
         Random random = new Random();
         int i = 0;
-        while (i < 100) {
+        while (i < 10000) {
             i++;
             int moveOption = random.nextInt(2);
             executeMoveOption(timetable, moveOption);
@@ -26,6 +26,7 @@ public class HillClimbing {
                         + " Objective: " + solution.getMetaData().getObjectiveValue().getObjective());
             }
         }
+        return solution;
     }
 
     private static void executeMoveOption(Timetable timetable, int moveOption) {
