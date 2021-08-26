@@ -65,6 +65,14 @@ public class Timetable {
                 false);
     }
 
+    public int getTeamsSize() {
+        return instance.getResources().getTeams().size();
+    }
+
+    public int getSlotsSize() {
+        return instance.getResources().getSlots().size();
+    }
+
     public void patch(int home, int away, int slot) {
         this.hashMapSchedule.replace(new Pair<>(home, away), slot);
 
