@@ -24,6 +24,8 @@ public class App {
         Solution solution = new Solution();
         solution.setObjectiveValue(timetable.computePenalties(instance));
         solution.setGames(timetable.getScheduleMatches());
+        System.out.println("Infeasibility: " + solution.getMetaData().getObjectiveValue().getInfeasibility()
+                + " Objective: " + solution.getMetaData().getObjectiveValue().getObjective() + "\n");
 
         solution = HillClimbing.bestSolution(timetable, solution, instance);
 

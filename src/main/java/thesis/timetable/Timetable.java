@@ -17,7 +17,7 @@ import thesis.solution.metadata.ObjectiveValue;
 import java.util.*;
 
 public class Timetable {
-    private final Instance instance;
+    private Instance instance;
 
     /*
     * hashMapSchedule = 1(team), 5(team) : 0(slot)
@@ -83,6 +83,13 @@ public class Timetable {
         this.hashMapStatus.replace(new Pair<>(away, slot), false);
     }
 
+    public Timetable(Timetable timetable) {
+        instance = timetable.instance;
+        hashMapStatus = timetable.getHashMapStatus();
+        hashMapSlot = timetable.getHashMapSlot();
+        hashMapSchedule = timetable.getHashMapScheduleClone();
+    }
+
     public Timetable(Instance instance) {
         this.instance = instance;
     }
@@ -130,6 +137,64 @@ public class Timetable {
 
         patch(team1, team2, slot2);
         patch(team2, team1, slot1);
+    }
+
+    public void swapOpponents(int team1, int team2) {
+        HashMap<Pair<Integer, Integer>, Integer> hashMapSlot = getHashMapSlot();
+        HashMap<Pair<Integer, Integer>, Boolean> hashMapStatus = getHashMapStatus();
+        for (int slot = 0; slot < instance.getResources().getSlots().size(); slot++) {
+            int team1Opponent = hashMapSlot.get(new Pair<>(team1, slot));
+            boolean team1Status = hashMapStatus.get(new Pair<>(team1, slot));
+            int team2Opponent = hashMapSlot.get(new Pair<>(team2, slot));
+            boolean team2Status = hashMapStatus.get(new Pair<>(team2, slot));
+            if (team1Opponent == team2) {
+                if (team1Status) {
+                    patch(team2, team1, slot);
+                } else {
+                    patch(team1, team2, slot);
+                }
+            } else {
+                if (team1Status) {
+                    patch(team1, team2Opponent, slot);
+                } else {
+                    patch(team2Opponent, team1, slot);
+                }
+                if (team2Status) {
+                    patch(team2, team1Opponent, slot);
+                } else {
+                    patch(team1Opponent, team2, slot);
+                }
+            }
+        }
+    }
+
+    public void swapTeams(int team1, int team2) {
+        HashMap<Pair<Integer, Integer>, Integer> hashMapSlot = getHashMapSlot();
+        HashMap<Pair<Integer, Integer>, Boolean> hashMapStatus = getHashMapStatus();
+        for (int slot = 0; slot < instance.getResources().getSlots().size(); slot++) {
+            int team1Opponent = hashMapSlot.get(new Pair<>(team1, slot));
+            boolean team1Status = hashMapStatus.get(new Pair<>(team1, slot));
+            int team2Opponent = hashMapSlot.get(new Pair<>(team2, slot));
+            boolean team2Status = hashMapStatus.get(new Pair<>(team2, slot));
+            if (team1Opponent == team2) {
+                if (team1Status) {
+                    patch(team2, team1, slot);
+                } else {
+                    patch(team1, team2, slot);
+                }
+            } else {
+                if (team1Status) {
+                    patch(team2, team1Opponent, slot);
+                } else {
+                    patch(team1Opponent, team2, slot);
+                }
+                if (team2Status) {
+                    patch(team1, team2Opponent, slot);
+                } else {
+                    patch(team2Opponent, team1, slot);
+                }
+            }
+        }
     }
 
     public void swapSlots(int slot1, int slot2) {
@@ -601,5 +666,9 @@ public class Timetable {
 
     public HashMap<Pair<Integer, Integer>, Boolean> getHashMapStatus() {
         return (HashMap<Pair<Integer, Integer>, Boolean>) hashMapStatus.clone();
+    }
+
+    private HashMap<Pair<Integer, Integer>, Integer> getHashMapScheduleClone() {
+        return (HashMap<Pair<Integer, Integer>, Integer>) hashMapSchedule.clone();
     }
 }
