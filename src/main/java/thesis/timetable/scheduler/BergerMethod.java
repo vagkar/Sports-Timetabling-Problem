@@ -41,14 +41,16 @@ public class BergerMethod implements ScheduleMethod{
         for (int i = 0; i < teams.size()/2; i++) {
             oddAwayTeams.add(teams.get(i + 1));
             if (i == 0)
+                continue;
+            oddHomeTeams.add(teams.get(i + teams.size()/2));
+            if (i == teams.size()/2 - 1){
+                oddHomeTeams.removeLast();
                 oddHomeTeams.add(teams.get(0));
-            else
-                oddHomeTeams.add(teams.get(i + teams.size()/2));
+            }
         }
 
         Team constantTeam = teams.get(teams.size()-1);
         evenAwayTeams.removeLast();
-        oddHomeTeams.removeLast();
         int teamsSize = teams.size();
         int timeSlots = slots.size();
 
@@ -69,7 +71,7 @@ public class BergerMethod implements ScheduleMethod{
                         timetable.putSchedule(match);
                         continue;
                     }
-                    Match match = new Match(oddHomeTeams.get(oddHomeTeams.size() - j), oddAwayTeams.get((oddAwayTeams.size()-1) - j), slots.get(i));
+                    Match match = new Match(oddHomeTeams.get(j - 1), oddAwayTeams.get((oddAwayTeams.size()-1) - j), slots.get(i));
                     timetable.putSchedule(match);
                 }
             }
@@ -77,9 +79,8 @@ public class BergerMethod implements ScheduleMethod{
                 evenHomeTeams.add(evenAwayTeams.pop());
                 evenAwayTeams.add(evenHomeTeams.pop());
             } else {
-                oddHomeTeams.addFirst(oddAwayTeams.pop());
-                oddAwayTeams.add(oddHomeTeams.getLast());
-                oddHomeTeams.removeLast();
+                oddHomeTeams.add(oddAwayTeams.pop());
+                oddAwayTeams.add(oddHomeTeams.pop());
             }
         }
 
@@ -101,7 +102,7 @@ public class BergerMethod implements ScheduleMethod{
                         timetable.putSchedule(match);
                         continue;
                     }
-                    Match match = new Match(oddAwayTeams.get((oddAwayTeams.size()-1) - j), oddHomeTeams.get(oddHomeTeams.size() - j), slots.get(i));
+                    Match match = new Match(oddAwayTeams.get((oddAwayTeams.size()-1) - j), oddHomeTeams.get(j - 1), slots.get(i));
                     timetable.putSchedule(match);
                 }
             }
@@ -109,9 +110,8 @@ public class BergerMethod implements ScheduleMethod{
                 evenHomeTeams.add(evenAwayTeams.pop());
                 evenAwayTeams.add(evenHomeTeams.pop());
             } else {
-                oddHomeTeams.addFirst(oddAwayTeams.pop());
-                oddAwayTeams.add(oddHomeTeams.getLast());
-                oddHomeTeams.removeLast();
+                oddHomeTeams.add(oddAwayTeams.pop());
+                oddAwayTeams.add(oddHomeTeams.pop());
             }
         }
         return this.timetable;
